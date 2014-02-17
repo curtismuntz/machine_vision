@@ -10,9 +10,13 @@ if (ispc == 0)
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
 else
 	filepath='D:\home\Pictures\178\'
+    image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
 end
 
 I = imread(image);
 
 noisy = imnoise(I, 'gaussian');
-fspecial(5,'gaussian',0.5)
+mask = fspecial('gaussian', [5 5], 0.5)
+
+test = conv2(noisy,mask)
+imshow(test)
