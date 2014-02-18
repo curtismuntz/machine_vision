@@ -5,14 +5,12 @@ clc;
 user=getenv('username');
 
 if (ispc == 0)
-<<<<<<< HEAD
 	%filepath = strcat('/home/',user,'/Dropbox/')
 	filepath = '/home/me/Dropbox/'
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
-=======
 	filepath = strcat('/home/',user,'/Dropbox/');
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
->>>>>>> 04c7cd2de03680f0a60486541d97085abb2b5260
+
 else
 	filepath='D:\home\Documents\git\machine_vision\hw3\';
     image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
@@ -27,15 +25,15 @@ end
 %--------%
 % transform an image to gray level
 I = imread(image);
-<<<<<<< HEAD
+
 I=rgb2gray(I);
 figure('name' )
-=======
+
 I = rgb2gray(I);
 figure('name', 'original image');
 title('original image');
 imshow(I);
->>>>>>> 04c7cd2de03680f0a60486541d97085abb2b5260
+
 
 %--------%
 % part 2 %
@@ -51,11 +49,9 @@ imshow(noisy);
 %--------%
 % create 5x5 gauss mask
 mask = fspecial('gaussian', [5 5], 0.5)
-
-<<<<<<< HEAD
 test = conv2(noisy,mask);
 imshow(test);
-=======
+
 %--------%
 % part 4 %
 %--------%
@@ -111,4 +107,3 @@ imDCT=dct2(I);
 figure('name', 'dct')
 title('dct')
 imshow(log(abs(imDCT)), []), colormap(jet), colorbar;
->>>>>>> 04c7cd2de03680f0a60486541d97085abb2b5260
