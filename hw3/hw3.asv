@@ -2,14 +2,15 @@ close all;
 clear;
 clc;
 
-user=getenv('username');
+user=getenv('username')
 
 if (ispc == 0)
-	filepath = strcat('/home/',user,'/Dropbox/');
-	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
+	filepath = strcat('/home/',user,'/Dropbox//')
+	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
 else
-	filepath='D:\home\Documents\git\machine_vision\hw3\';
-    image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
+	filepath='D:\home\Documents\git\machine_vision\hw3\'
+    image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
+    convpath = 'D:\home\Documents\git\machine_vision\hw2\'
 end
 
 %---------------------------------------------%
@@ -45,20 +46,18 @@ mask = fspecial('gaussian', [5 5], 0.5)
 % part 4 %
 %--------%
 % filter in space domain
-% this utilizes custom convolution function.
-
 cd ../hw2/
-space = convolution(noisy, mask);
+TMP = convolution(noisy, mask);
 cd ../hw3/
 figure('name', 'convolved (filtered) image');
 title('convolved (filtered) image');
-imshow(space);
+imshow(TMP);
 
 %--------%
 % part 5 %
 %--------%
 % fourier transform the image
-
+cd ../hw2/
 fftd = fft2(noisy);
 figure('name', 'fouriered image');
 title('fouriered image');
@@ -70,29 +69,14 @@ imshow(fftd);
 % filter in frequency domain
 cd ../hw3/
 Z = fspecial('gaussian', [600 712], 0.5);
-Z = fft2(Z);
+%Z = fft2(Z);
 filtered = fftd.*Z;
 
+
+imageD = ifft2(filtered);
+dmin = min(min(abs(filtered))); dmax = max(max(abs(filtered)));
+imshow( ( ifftshift(filtered)), [dmin dmax]),
+reversed= ifft2(filtered);
 figure('name', 'freq filtered image');
 title('freq filtered image');
-imageD = ifft2(filtered);
-dmin = min(min(abs(imageD))); dmax = max(max(abs(imageD)));
-imshow( ( ifftshift(imageD)), [dmin dmax]),
-
-
-
-%---------------------------------------------%
-% problem 2                                   %
-%---------------------------------------------%
-
-%--------%
-% part 1 %
-%--------%
-% Apply the DCT on an image of your choice.
-I = imread(image);
-I = rgb2gray(I);
-I = double(I);
-imDCT=dct2(I);
-figure('name', 'dct')
-title('dct')
-imshow(log(abs(imDCT)), []), colormap(jet), colorbar;
+imshow(reversed);
