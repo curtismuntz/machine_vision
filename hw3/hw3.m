@@ -2,6 +2,7 @@ close all;
 clear;
 clc;
 
+% Find the file (different path on linux vs Win)
 if (ispc == 0)
 	filepath = '/home/me/Dropbox/'
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
@@ -18,14 +19,19 @@ end
 % part 1 %
 %--------%
 % transform an image to gray level
+
+% read image
 I = imread(image);
+% convert to grayscale
 I = rgb2gray(I);
+% resize to usable size
 I = imresize(I, [600,712]);
+
+%begin figure
 figure('name', 'Problem 1');
 subplot(3,2,1);
 imshow(I);
 title('original image');
-
 
 %--------%
 % part 2 %
@@ -40,14 +46,14 @@ title('noizy image');
 % part 3 %
 %--------%
 % create 5x5 gauss mask
-mask = fspecial('gaussian', [5 5], 0.5)
+mask = fspecial('gaussian', [5 5], 0.5);
 
 %--------%
 % part 4 %
 %--------%
 % filter in space domain
-% this utilizes custom convolution function.
 
+% this utilizes custom convolution function coded in hw2.
 cd ../hw2/
 space = convolution(noisy, mask);
 cd ../hw3/
@@ -70,11 +76,14 @@ title('fouriered image');
 %--------%
 % filter in frequency domain
 cd ../hw3/
+% convolution in frequency is element by element matrix multiplication
+% so mask dimensions have to equal image dimensions
 Z = fspecial('gaussian', [600 712], 0.5);
 Z = fft2(Z);
 filtered = fftd.*Z;
 
 subplot(3,2,5);
+% inverse fft the image and display the result
 imageD = ifft2(filtered);
 dmin = min(min(abs(imageD))); dmax = max(max(abs(imageD)));
 imshow( ( ifftshift(imageD)), [dmin dmax]),
@@ -101,6 +110,9 @@ title('dct of original image')
 % part 2 %
 %--------%
 % cut these images, store top left
+%
+% these crop the image using a custom cropping function cropper
+
 % imDCT2 = cropper(imDCT, .5, 'normal');
 % [M,N]=size(imDCT);
 % imDCT2 = imcrop(imDCT,[0,0, M/2, N/2]);
@@ -167,6 +179,9 @@ title('sixteenth of data')
 % part 5 %
 %--------%
 % cut these images, store bottom left
+%
+% custom cropper kind of needs odd dimensions on M and N of matrix,
+% so i went with built in imcrop function
 
 % badDCT2=cropper(imDCT, (1/2), 'bad');
 % badDCT4=cropper(imDCT, (1/4), 'bad');
