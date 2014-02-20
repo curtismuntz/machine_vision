@@ -8,7 +8,7 @@ if (ispc == 0)
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
 else
 	filepath='D:\home\Documents\git\machine_vision\hw3\';
-    image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
+	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
 end
 
 %---------------------------------------------%
