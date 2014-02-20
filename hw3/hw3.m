@@ -217,3 +217,31 @@ title('eighth of data')
 subplot(2,2,4)
 imshow(log(abs(badDCT16)),[]), colormap(jet), colorbar;
 title('sixteenth of data')
+
+
+
+%--------%
+% part 7 %
+%--------%
+% inverse bad dcts
+figure('name', 'inverse DCTd image')
+[M,N]=size(imDCT);
+K = uint8(imresize(sqrt(idct2(badDCT2)), [M,N]));
+subplot(2,2,1)
+imshow(K, [0 255]);
+title('half of data')
+
+K = uint8(imresize(sqrt(idct2(badDCT4)), [M N]));
+subplot(2,2,2)
+imshow(K, []);
+title('quarter of data')
+
+K = uint8(imresize(sqrt(idct2(badDCT8)), [M N]));
+subplot(2,2,3)
+imshow(K, []);
+title('eighth of data')
+
+K = uint8(imresize(sqrt(idct2(badDCT16)), [M N]));
+subplot(2,2,4)
+imshow(K, [0 255]);
+title('sixteenth of data')
