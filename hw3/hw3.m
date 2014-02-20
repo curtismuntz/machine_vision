@@ -4,8 +4,8 @@ clc;
 
 % Find the file (different path on linux vs Win)
 if (ispc == 0)
-	filepath = '/home/me/Dropbox/'
-	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg')
+	filepath = '/home/me/Dropbox/';
+	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
 else
 	filepath='D:\home\Documents\git\machine_vision\hw3\';
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
@@ -157,7 +157,7 @@ figure('name', 'inverse DCTd image')
 [M,N]=size(imDCT);
 K = uint8(imresize(sqrt(idct2(imDCT2)), [M,N]));
 subplot(2,2,1)
-imshow(K, [0 255]);
+imshow(K, []);
 title('half of data')
 
 K = uint8(imresize(sqrt(idct2(imDCT4)), [M N]));
@@ -172,23 +172,15 @@ title('eighth of data')
 
 K = uint8(imresize(sqrt(idct2(imDCT16)), [M N]));
 subplot(2,2,4)
-imshow(K, [0 255]);
+imshow(K, []);
 title('sixteenth of data')
 
 %--------%
 % part 5 %
 %--------%
-% cut these images, store bottom left
+% cut these images, store bottom right
 %
-% custom cropper kind of needs odd dimensions on M and N of matrix,
-% so i went with built in imcrop function
 
-% badDCT2=cropper(imDCT, (1/2), 'bad');
-% badDCT4=cropper(imDCT, (1/4), 'bad');
-% badDCT8=cropper(imDCT, (1/8), 'bad');
-% badDCT16=cropper(imDCT, (1/16), 'bad');
-
-%imcrop(I, rect) crops the image I. rect is a four-element position vector[xmin ymin width height] 
 [x,y]=size(imDCT);
 badDCT2  = imcrop(imDCT, [ceil(x/2), ceil(y/2), x/2, y/2]);
 badDCT4  = imcrop(imDCT, [ceil(x/4), ceil(y/4), x/4, y/4]);
@@ -228,7 +220,7 @@ figure('name', 'inverse DCTd image')
 [M,N]=size(imDCT);
 K = uint8(imresize(sqrt(idct2(badDCT2)), [M,N]));
 subplot(2,2,1)
-imshow(K, [0 255]);
+imshow(K, []);
 title('half of data')
 
 K = uint8(imresize(sqrt(idct2(badDCT4)), [M N]));
