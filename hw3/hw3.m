@@ -2,7 +2,7 @@ close all;
 clear;
 clc;
 
-% Find the file (different path on linux vs Win)
+% Find the file (different path on my linux vs Win installs)
 if (ispc == 0)
 	filepath = '/home/me/Dropbox/';
 	image = strcat(filepath, 'Space_Shuttle_Columbia_launching.jpg');
@@ -18,16 +18,12 @@ end
 %--------%
 % part 1 %
 %--------%
-% transform an image to gray level
+% read image and transform to gray level
 
-% read image
 I = imread(image);
-% convert to grayscale
 I = rgb2gray(I);
-% resize to usable size
 I = imresize(I, [600,712]);
 
-%begin figure
 figure('name', 'Problem 1');
 subplot(3,2,1);
 imshow(I);
@@ -37,6 +33,7 @@ title('original image');
 % part 2 %
 %--------%
 % add gaussian noise
+
 noisy = imnoise(I, 'gaussian');
 subplot(3,2,2);
 imshow(noisy);
@@ -46,14 +43,15 @@ title('noizy image');
 % part 3 %
 %--------%
 % create 5x5 gauss mask
+
 mask = fspecial('gaussian', [5 5], 0.5);
 
 %--------%
 % part 4 %
 %--------%
 % filter in space domain
-
 % this utilizes custom convolution function coded in hw2.
+
 cd ../hw2/
 space = convolution(noisy, mask);
 cd ../hw3/
@@ -75,6 +73,7 @@ title('fouriered image');
 % part 6 %
 %--------%
 % filter in frequency domain
+
 cd ../hw3/
 % convolution in frequency is element by element matrix multiplication
 % so mask dimensions have to equal image dimensions
@@ -83,7 +82,6 @@ Z = fft2(Z);
 filtered = fftd.*Z;
 
 subplot(3,2,5);
-% inverse fft the image and display the result
 imageD = ifft2(filtered);
 dmin = min(min(abs(imageD))); dmax = max(max(abs(imageD)));
 imshow( ( ifftshift(imageD)), [dmin dmax]),
@@ -99,6 +97,7 @@ title('freq filtered image');
 % part 1 %
 %--------%
 % Apply the DCT on an image of your choice.
+
 imDCT=im2double(I);
 imDCT=dct2(I);
 figure('name', 'Good DCT choices')
@@ -110,16 +109,7 @@ title('dct of original image')
 % part 2 %
 %--------%
 % cut these images, store top left
-%
 % these crop the image using a custom cropping function cropper
-
-% imDCT2 = cropper(imDCT, .5, 'normal');
-% [M,N]=size(imDCT);
-% imDCT2 = imcrop(imDCT,[0,0, M/2, N/2]);
-% imDCT4 = imcrop(imDCT,[0,0, M/4, N/4]);
-% imDCT8 = imcrop(imDCT,[0,0, M/8, N/8]);
-% imDCT16 = imcrop(imDCT,[0,0, M/16, N/16]);
-% imDCTtest = imcrop(imDCT, [0,0,M*.9, N*.9]);
 
 imDCT2=cropper(imDCT, .5, 'normal');
 imDCT4=cropper(imDCT, .25, 'normal');
@@ -131,6 +121,7 @@ imDCT16=cropper(imDCT, .0625, 'normal');
 % part 3 %
 %--------%
 % display the images
+
 subplot(3,2,2);
 imshow(log(abs(imDCT2)),[]), colormap(jet), colorbar;
 title('half of dct info')
@@ -179,7 +170,6 @@ title('sixteenth of data')
 % part 5 %
 %--------%
 % cut these images, store bottom right
-%
 
 [x,y]=size(imDCT);
 badDCT2  = imcrop(imDCT, [ceil(x/2), ceil(y/2), x/2, y/2]);
@@ -192,6 +182,7 @@ badDCT16 = imcrop(imDCT, [ceil(x/16), ceil(y/16), x/16, y/16]);
 % part 6 %
 %--------%
 % display dcts of bad stuffs
+
 figure('name', 'bad dct data');
 subplot(2,2,1)
 imshow(log(abs(badDCT2)),[]), colormap(jet), colorbar;
@@ -216,6 +207,7 @@ title('sixteenth of data')
 % part 7 %
 %--------%
 % inverse bad dcts
+
 figure('name', 'inverse DCTd image')
 [M,N]=size(imDCT);
 K = uint8(imresize(sqrt(idct2(badDCT2)), [M,N]));
