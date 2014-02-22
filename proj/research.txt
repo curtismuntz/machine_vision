@@ -1,1 +1,14 @@
 http://subgroup-ash.blogspot.com/2013/11/stereo-camera-with-2-raspberry-pis-so-i.html
+
+
+Send/Recieve network video in MATLAB:
+	* http://www.mathworks.com/help/vision/ug/transmit-audio-and-video-content-over-network.html
+some matlab discussion on similar issues:
+	* http://www.mathworks.com/matlabcentral/newsreader/view_thread/173447
+
+stream pi over network:
+	* http://raspi.tv/2013/how-to-stream-video-from-your-raspicam-to-your-nexus-7-tablet-using-vlc
+
+%%%%%%%%%%%%%%%%%%%%
+PIcam metrics:
+	* http://www.ovt.com/products/sensor.php?id=66
