@@ -96,7 +96,7 @@ sobelSTART=tic
 h=convolution(I,sobelX);
 v=convolution(I,sobelY);
 c1=(abs(h)+abs(v));
-toc(sobelSTART)
+sobeltime= toc(sobelSTART)
 imshow(c1);
 title('c=10')
 
@@ -108,9 +108,9 @@ title('c=10')
 
 figure('name', 'laplacian mask')
 L=[0 1 0; 1 -4 1; 0 1 0];
-LaplaceSTART=tic
+laplaceSTART = tic
 laplacedI=convolution(I,L);
-toc(laplaceSTART)
+laplacetime = toc(laplaceSTART)
 imshow(im2uint8(laplacedI)), title('laplacian mask');
 
 
@@ -118,9 +118,16 @@ imshow(im2uint8(laplacedI)), title('laplacian mask');
 % part 6 %
 %--------%
 % compare computation times
+sprintf('sobel approach: %s',sobeltime)
+sprintf('laplacian approach: %s', laplacetime)
 
+%---------------------------------------------%
+% problem 2                                   %
+%---------------------------------------------%
 
-
+%--------%
+% part 1 %
+%--------%
 
 
 rmpath ../commonFunctions
