@@ -1,4 +1,4 @@
-[I] = function getIMG(imageNAMEwithextension)
+function [I] = getIMG(imageNAMEwithextension)
 % Find the file (different path on my linux vs Win installs)
 % requires extension
 if (ispc == 0)

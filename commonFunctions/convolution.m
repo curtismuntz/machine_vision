@@ -1,10 +1,5 @@
 function [filteredIMG] = convolution(image, mask)
-	i = 1;
-	j = 1;
-	k = 1;
-	l = 1;
 
-	
 	[maskM, maskN]=size(mask);
     [M,N] = size(image);
     
@@ -21,9 +16,8 @@ function [filteredIMG] = convolution(image, mask)
 	maskCenterCol=ceil(maskN/2);
 
 	%initialize filtered image
-	newIMG = zeros(size(image));
-	filteredIMG = im2uint8(newIMG);
-    
+	filteredIMG = zeros(size(image));
+
 	%convolve!
     for i=1:M;
 		for j=1:N;
