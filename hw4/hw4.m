@@ -121,13 +121,24 @@ imshow(im2uint8(laplacedI)), title('laplacian mask');
 sprintf('sobel approach: %s',sobeltime)
 sprintf('laplacian approach: %s', laplacetime)
 
+
+rmpath ../commonFunctions
 %---------------------------------------------%
 % problem 2                                   %
 %---------------------------------------------%
-
+addpath ../commonFunctions
 %--------%
 % part 1 %
 %--------%
+I2 = getIMG('Soyuz_TMA-19_spacecraft_departs_the_ISS.jpg');
+I2 = im2double(rgb2gray(imresize(I2,[400,400])));
 
-
+figure
+c=2;
+sobelX=double([-1 0 1; -c 0 c; -1 0 1]);
+sobelY=double([1 c 1; 0 0 0; -1 -c -1]);
+[M,N]=size(sobelX);
+[M1,N1]=size(I2);
+sobelX1 = padarray(sobelX,[(ceil(M1/2)-ceil(M/2)),(ceil(N1/2)-(ceil(N)/2))]);
+imshow(sobelX1);
 rmpath ../commonFunctions
