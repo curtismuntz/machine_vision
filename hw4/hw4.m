@@ -5,7 +5,7 @@ clc;
 close all;
 addpath ../commonFunctions
 
-%image preprocessing!
+% %image preprocessing!
 I = getIMG('edgePhoto.jpg');
 I = imresize(I,[400,400]);
 I = rgb2gray(I);
@@ -115,9 +115,11 @@ sprintf('laplacian approach: %s', laplacetime)
 % Obtain the FFT of the horizontal and vertical Sobel masks.
 % You need to perform zero padding.
 addpath ../commonFunctions
-I2 = getIMG('Soyuz_TMA-19_spacecraft_departs_the_ISS.jpg');
+%I2 = getIMG('Soyuz_TMA-19_spacecraft_departs_the_ISS.jpg');
+I2 = getIMG('ed3.jpg');
 rmpath ../commonFunctions
-I2 = im2double(rgb2gray(imresize(I2,[401,401])));
+%I2 = im2double(rgb2gray(imresize(I2,[401,401])));
+I2 = imresize(I2,[401,401]);
 imshow(I2);
 
 figure('name','ffts of sobel masks');
@@ -208,6 +210,3 @@ C=corner(I2); %to find corner points
 imshow(I2);hold on, plot(C(:,1),C(:,2),'ro')
 title('corners detected')
 figure('name','corner detection2')
-C=corner(I); %to find corner points
-imshow(I);hold on, plot(C(:,1),C(:,2),'ro')
-title('corners detected 2');
