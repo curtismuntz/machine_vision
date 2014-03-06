@@ -1,5 +1,5 @@
     sendReceive = 'recieve';
-    url = 'mms://192.168.42.1:8090';
+    url = 'http://192.168.42.1:8090';
     filename = 'vipmen.avi';
 
 
