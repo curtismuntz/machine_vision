@@ -1,0 +1,222 @@
+
+% This LaTeX was auto-generated from an M-file by MATLAB.
+% To make changes, update the M-file and republish this document.
+
+\documentclass{IEEEtran}
+\usepackage{graphicx}
+\usepackage{color}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{cite}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{pdfpages}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.9,0.9,0.9}
+\definecolor{mymauve}{rgb}{0.58,0,0.52}
+
+\lstset{
+  backgroundcolor=\color{mygray},     % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\tiny\ttfamily,          % the size of the fonts that are used for the code
+  breakatwhitespace=false,            % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                    % sets automatic line breaking
+  captionpos=b,                       % sets the caption-position to bottom
+  commentstyle=\color{mygreen},       % comment style
+  deletekeywords={...},               % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},             % if you want to add LaTeX within your code
+  extendedchars=true,                 % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                       % adds a frame around the code
+  keepspaces=true,                    % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},          % keyword style
+  language=Matlab,                    % the language of the code
+  morekeywords={*,...},               % if you want to add more keywords to the set
+  numbers=left,                       % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                      % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray},    % the style that is used for the line-numbers
+  rulecolor=\color{black},            % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                   % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,             % underline spaces within strings only
+  showtabs=false,                     % show tabs within strings adding particular underscores
+  stepnumber=2,                       % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},        % string literal style
+  tabsize=1,                          % sets default tabsize to 2 spaces
+  %title=\lstname                      % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\title{EEE 178 Homework 6}
+\date{\today}
+\author{Curtis Muntz}
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
+\begin{document} \maketitle 
+
+image preprocessing...
+ 
+\begin{lstlisting}[language=Matlab]
+clear all, clc, close all;
+addpath ../commonFunctions;
+%code for my custom functions can be found on
+%https://github.com/curtismuntz/machine_vision/tree/master/commonFunctions
+%Problem 1 photo
+P1original = getIMG('Tux2.png');
+%Problem 2 photo
+P2original = getIMG('mvHW62A.jpg');
+%Problem 3 photo
+P3original = getIMG('mvHW61.jpg');
+rmpath ../commonFunctions
+P1 = imresize(P1original, [401 401]);
+\end{lstlisting}
+
+
+\section{Problem 1: Majority Filtering}
+
+
+The majority filter produces pretty excellent results on black and white images with impulse noise. My median filter code was modified to this specific case to produce the majority filter function. For the most part, this function works very well until it hits the image borders. This is because its implementation ignores the borders of the image.
+ 
+\begin{lstlisting}[language=Matlab]
+figure('name','Majority filtering')
+Inoiz = imnoise(P1 ,'salt & pepper', 0.05);
+Inoiz = im2bw(Inoiz);
+subplot(121), imshow(Inoiz), title('Noisy Image');
+
+addpath ../commonFunctions
+Ifilt = majorityfilter(Inoiz);
+rmpath ../commonFunctions
+
+subplot(122), imshow(Ifilt), title('Majority Filtered Image');
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab]
+function [MAJ] = majorityfilter(image)
+
+    [M,N] = size(image);
+    center=2;
+    z=1;
+    values=zeros(1,9);
+    MAJ=zeros(size(image));
+    MAJ=im2bw(MAJ);
+    for i=1:M
+      for j=1:N
+        for k=1:3
+          for l=1:3
+            if (((i+(k-center)) > 0) && ((j+(l-center)) > 0) && ...
+                            (i+(k-center) < M) && (j+(l-center) < N))
+              values(z) = image((i+(k-center)),(j+(l-center)));
+              z = z + 1;
+            end
+          end
+        end
+        if (sum(values) >= 5)
+         MAJ(i,j) = 1;
+        else
+            MAJ(i,j) = 0;
+      end
+        clear values;
+        z = 1;
+    end
+end
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_01.eps}
+
+
+\section{Problem 2: Removing Unwanted Portions of Objects}
+
+
+My overall strategy was to first do a closing operation to fill in holes and gaps, and remove some noise. This operation removed the dark line from the rightmost $A$. Next I opened the image, to remove objects. This operation removed the white line connecting the two $A$'s. Finally I dilated A to make the final image closer to the original image size. For simplicity, I used the same structuring element throughout each process.
+ 
+\begin{lstlisting}[language=Matlab]
+figure('name','Removing Unwanted Portions of Objects');
+A = im2bw(imresize(P2original, [401 401]));
+B = strel('disk', 2);
+closing = imclose(A,B);
+reopening = imopen(closing,B);
+final = imerode(reopening, B);
+final = imdilate(final, B);
+subplot(221), imshow(A), title('Original Image');
+subplot(222), imshow(closing), title('Result After Closing Operation');
+subplot(223), imshow(reopening), title('Result After Reopeing Closed');
+subplot(224), imshow(final), title('Result After Opening dilate B')
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_02.eps}
+
+
+\section{Problem 3: Edge detection on a noisy image}
+
+\begin{lstlisting}[language=Matlab]
+P3 = rgb2gray(P3original);
+figure('name', 'Edge Detection on a Noisy Binary Image')
+imshow(P3), title('Original Noisy Image');
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_03.eps}
+
+
+\subsection{Part 1: Classical Edge Detectors}
+
+
+Because the image is so noisy,  I  wanted to filter the image before I attempted to do edge detection. Because I retrived the noisy image from the internet, I am unsure of the nature of the noise. Although I could estimate the noise type, I decided to be scientific instead and inspected the histogram of the image.
+ 
+\begin{lstlisting}[language=Matlab]
+figure('name', 'Noisy Image Histogram');
+imhist(P3), title('Noisy Image Histogram');
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_04.eps}
+
+Because it seems that most of the histogram data is on the minimum and maximum gray values, I reasoned that the noise resembled impulse noise. Because of this, I first sent the image through my median filter. As shown in the following plots, the classical edge detection methods were fairly decent. It seems that the Roberts filter is the best of these classical edge detectors.
+ 
+\begin{lstlisting}[language=Matlab]
+figure('name', 'Classical Edge Detection Methods')
+
+addpath ../commonFunctions
+P3f=medianfilter(P3);
+rmpath ../commonFunctions
+
+subplot(221), imshow(edge(P3f, 'canny')), title('Canny');
+subplot(222), imshow(edge(P3f, 'sobel')), title('Sobel');
+subplot(223), imshow(edge(P3f, 'prewitt')), title('Prewitt');
+subplot(224), imshow(edge(P3f, 'roberts')), title('Roberts');
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_05.eps}
+
+
+\subsection{Part 2-4: Thresholding and using Morphological Edge Detectors}
+
+
+Again, the image is plagued with some serious noise. In order to try to get reasonable results from the edge detection methods, I first restored the image through the use of my majority filter. It can be assumed that the rgb impulse noise would translate into binary impulse noise, so I did not need to inspect the image histogram.
+ 
+\begin{lstlisting}[language=Matlab]
+P3t = imresize(im2bw(P3, 0.4), [401 401]);
+
+addpath ../commonFunctions
+A = majorityfilter(P3t);
+rmpath ../commonFunctions
+
+B = strel('disk',2);
+grad = (imdilate(A, B) - imerode(A, B))/2;
+
+%part3
+joe1=A-imerode(A, B);
+
+%part4
+joe2=imdilate(A, B)-A;
+
+figure('name', 'Morphological Edge Detectors');
+subplot(221), imshow(grad), title('Morphological Gradient');
+subplot(222), imshow(joe1), title('A - (A erode B)');
+subplot(223), imshow(joe2), title('(A dilate B) - A');
+\end{lstlisting}
+
+\includegraphics [width=3in]{hw6_06.eps}
+
+All of the morphological edge detectors were effective, but the gradient seemed to be most effective at detecting the edges.
+ 
+
+
+
+\end{document}
+    
