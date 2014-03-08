@@ -1,6 +1,5 @@
 http://subgroup-ash.blogspot.com/2013/11/stereo-camera-with-2-raspberry-pis-so-i.html
 
-
 Send/Recieve network video in MATLAB:
 	* http://www.mathworks.com/help/vision/ug/transmit-audio-and-video-content-over-network.html
 some matlab discussion on similar issues:
@@ -9,6 +8,47 @@ some matlab discussion on similar issues:
 stream pi over network:
 	* http://raspi.tv/2013/how-to-stream-video-from-your-raspicam-to-your-nexus-7-tablet-using-vlc
 
-%%%%%%%%%%%%%%%%%%%%
 PIcam metrics:
 	* http://www.ovt.com/products/sensor.php?id=66
+
+%%%%%%%%%%%%%%%%%%%%
+Current idea
+	* Use webcam, and picam
+	* pipe both to VLC or ffmpeg on pi
+	* use VLC or ffmpeg to combine both into a "mosiaic" (see mosiac on VLC tutorials)
+	* post process in MATLAB
+
+https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos
+
+http://ffmpeg.org/faq.html#How-can-I-concatenate-video-files_003f
+
+https://trac.ffmpeg.org/wiki/How%20to%20capture%20a%20webcam%20input
+
+%%%%%%%%%%%%%%%%%%%%
+
+current working scripts:
+
+* as outlined by ffmpeg tutorial:
+ffmpeg
+	-i 1.avi -i 2.avi -i 3.avi -i 4.avi
+	-filter_complex "
+		nullsrc=size=640x480 [base];
+		[0:v] setpts=PTS-STARTPTS, scale=320x240 [upperleft];
+		[1:v] setpts=PTS-STARTPTS, scale=320x240 [upperright];
+		[2:v] setpts=PTS-STARTPTS, scale=320x240 [lowerleft];
+		[3:v] setpts=PTS-STARTPTS, scale=320x240 [lowerright];
+		[base][upperleft] overlay=shortest=1 [tmp1];
+		[tmp1][upperright] overlay=shortest=1:x=320 [tmp2];
+		[tmp2][lowerleft] overlay=shortest=1:y=240 [tmp3];
+		[tmp3][lowerright] overlay=shortest=1:x=320:y=240
+	"
+	-c:v libx264 output.mkv
+
+* working, combine two video files into one:
+ffmpeg -i wat.mov -i TAtest.avi -filter_complex "nullsrc=size=640x240 [base]; [0:v] setpts=PTS-STARTPTS, scale=320x240 [left]; [1:v] setpts=PTS-STARTPTS, scale=320x240 [right]; [base][left] overlay=shortest=1 [tmp1]; [tmp1][right] overlay=shortest=1:x=320" -c:v libx264 output.mkv
+
+* working, getting webcam (this works for microsoft webcam):
+ffmpeg -f v4l2 -r 25 -s 640x480 -i /dev/video0 out.avi
+
+* working, albeit poorly: combining webcam video with video (framerate issues):
+ffmpeg -f v4l2 -r 25 -s 640x480 -i /dev/video0 -i wat.mov -filter_complex "nullsrc=size=1280x480 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [left]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [right]; [base][left] overlay=shortest=1 [tmp1]; [tmp1][right] overlay=shortest=1:x=640" -c:v libx264 output.mkv
