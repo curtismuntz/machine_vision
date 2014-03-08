@@ -8,7 +8,7 @@ original = getIMG('Tux2.png');
 I = imresize(original, [400,400]);
 I = rgb2gray(im2double(I));
 finger= getIMG('HW5finger.jpg');
-F = rgb2gray(im2double(finger));
+F = im2bw(rgb2gray(finger));
 rmpath ../commonFunctions;
 figure('name','original img'), imshow(I), title('Original Image');
 %% Problem 1: Edge detection approximations of the gradient magnitude
@@ -47,7 +47,6 @@ figure('name', 'Surf plot')
 surf(Ix), hold on, surf(Iy), title('Surf');
 
 %% Problem 3: Comparing differnet edge detection approaches
-%%
 % Comparing between the various edge detectors, we can see that for the most part they are very similar. The Canny edge detector has some additional detections, and it found some instances where localized intensity changes create edges. I believe this is due to the additional thresholding process that is built inside of the Canny detection method.
 %reprocess original image:
 I = im2double(rgb2gray(imresize(original, [400, 400])));
@@ -60,9 +59,7 @@ BW = edge(I, 'Roberts');
 subplot(223), imshow(BW), title('Roberts');
 BW = edge(I, 'Canny');
 subplot(224), imshow(BW), title('Canny');
-%% Problem 4
-% Applying morphological filters to remove noise
-%%
+%% Problem 4: Applying morphological filters to remove noise
 % After applying various elementary morphological filters with different structuring elements, it seems an effective noise removal combination was the disk structuring element being dilated with the original image. Also shown in the remaining plots are dilation with various structuring elements to compare their effectiveness.
 figure('name', 'fingerprint noise reduction')
 subplot(221), imshow(F), title('Original Image with Noise');
