@@ -118,7 +118,7 @@ function [MAJ] = majorityfilter(image)
 end
 \end{lstlisting}
 
-\includegraphics [width=3in]{hw6_01.eps}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{hw6_01.eps}
 
 
 \section{Problem 2: Removing Unwanted Portions of Objects}
@@ -140,7 +140,7 @@ subplot(223), imshow(reopening), title('Result After Reopeing Closed');
 subplot(224), imshow(final), title('Result After Opening dilate B')
 \end{lstlisting}
 
-\includegraphics [width=3in]{hw6_02.eps}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{hw6_02.eps}
 
 
 \section{Problem 3: Edge detection on a noisy image}
@@ -164,7 +164,7 @@ figure('name', 'Noisy Image Histogram');
 imhist(P3), title('Noisy Image Histogram');
 \end{lstlisting}
 
-\includegraphics [width=3in]{hw6_04.eps}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{hw6_04.eps}
 
 Because it seems that most of the histogram data is on the minimum and maximum gray values, I reasoned that the noise resembled impulse noise. Because of this, I first sent the image through my median filter. As shown in the following plots, the classical edge detection methods were fairly decent. It seems that the Roberts filter is the best of these classical edge detectors.
  
@@ -181,7 +181,7 @@ subplot(223), imshow(edge(P3f, 'prewitt')), title('Prewitt');
 subplot(224), imshow(edge(P3f, 'roberts')), title('Roberts');
 \end{lstlisting}
 
-\includegraphics [width=3in]{hw6_05.eps}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{hw6_05.eps}
 
 
 \subsection{Part 2-4: Thresholding and using Morphological Edge Detectors}
@@ -211,7 +211,7 @@ subplot(222), imshow(joe1), title('A - (A erode B)');
 subplot(223), imshow(joe2), title('(A dilate B) - A');
 \end{lstlisting}
 
-\includegraphics [width=3in]{hw6_06.eps}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{hw6_06.eps}
 
 All of the morphological edge detectors were effective, but the gradient seemed to be most effective at detecting the edges.
  
