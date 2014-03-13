@@ -17,7 +17,7 @@ P1 = imresize(P1original, [401 401]);
 % The majority filter produces pretty excellent results on black and white images with impulse noise. My median filter code was modified to this specific case to produce the majority filter function. For the most part, this function works very well until it hits the image borders. This is because its implementation ignores the borders of the image.
 
 figure('name','Majority filtering')
-Inoiz = imnoise(P1 ,'salt & pepper', 0.05);
+Inoiz = imnoise(P1 ,'salt & pepper', 0.1);
 Inoiz = im2bw(Inoiz);
 subplot(121), imshow(Inoiz), title('Noisy Image');
 
@@ -31,7 +31,8 @@ subplot(122), imshow(Ifilt), title('Majority Filtered Image');
 % My overall strategy was to first do a closing operation to fill in holes and gaps, and remove some noise. This operation removed the dark line from the rightmost $A$. Next I opened the image, to remove objects. This operation removed the white line connecting the two $A$'s. Finally I dilated A to make the final image closer to the original image size. For simplicity, I used the same structuring element throughout each process.
 
 figure('name','Removing Unwanted Portions of Objects');
-A = im2bw(imresize(P2original, [401 401]));
+%A = im2bw(imresize(P2original, [401 401]));
+A=im2bw(P2original);
 B = strel('disk', 2);
 closing = imclose(A,B);
 reopening = imopen(closing,B);
