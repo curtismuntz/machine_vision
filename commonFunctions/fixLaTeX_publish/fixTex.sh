@@ -3,11 +3,11 @@
 #fix this to pass in filename instead
 
 #cat $fileName
-#cd /Users/me/git/machine_vision/hw6/html/
+cd /Users/me/git/machine_vision/test/html/
 
-cd /Users/me/Dropbox/School/188/hw5/html
+#cd /Users/me/Dropbox/School/188/hw5/html
 
-file=hw5.tex
+file=test1.tex
 cp /Users/me/git/machine_vision/commonFunctions/fixLaTeX_publish/codeInsert.txt /Users/me/Desktop/tmp/published/codeInsert.txt
 cp $file /Users/me/Desktop/tmp/published/output1.tex
 cp *.eps /Users/me/Desktop/tmp/published/
@@ -57,7 +57,7 @@ cat output.tex | sed -e 's/width=4in/width=3in/g' > output1.tex
 cat output1.tex > output.tex
 rm output1.tex
 
-cat output.tex | sed -e 's/\\color{lightgray} \\begin{lstlisting}\[language=Matlab\]/ { \\tiny \\color{lightgray} \\begin{verbatim}/g' > output1.tex
+cat output.tex | sed -e 's/\\color{lightgray} \\begin{lstlisting}\[language=Matlab\]/ { \\small \\color{lightgray} \\begin{verbatim}/g' > output1.tex
 cat output1.tex > output.tex
 rm output1.tex
 
@@ -69,4 +69,6 @@ cat output.tex | sed -e 's/\\begin{document}/\\begin{document} \\maketitle /g' >
 cat output1.tex > output.tex
 rm output1.tex
 
-
+cat output.tex | sed -e 's/\\includegraphics /\\includegraphics /g' > output1.tex
+cat output1.tex > output.tex
+rm output1.tex

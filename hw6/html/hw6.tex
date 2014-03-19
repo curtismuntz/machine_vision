@@ -50,7 +50,7 @@ The majority filter produces pretty excellent results on black and white images 
 \end{par} \vspace{1em}
 \begin{verbatim}
 figure('name','Majority filtering')
-Inoiz = imnoise(P1 ,'salt & pepper', 0.05);
+Inoiz = imnoise(P1 ,'salt & pepper', 0.1);
 Inoiz = im2bw(Inoiz);
 subplot(121), imshow(Inoiz), title('Noisy Image');
 
@@ -71,7 +71,8 @@ My overall strategy was to first do a closing operation to fill in holes and gap
 \end{par} \vspace{1em}
 \begin{verbatim}
 figure('name','Removing Unwanted Portions of Objects');
-A = im2bw(imresize(P2original, [401 401]));
+%A = im2bw(imresize(P2original, [401 401]));
+A=im2bw(P2original);
 B = strel('disk', 2);
 closing = imclose(A,B);
 reopening = imopen(closing,B);
