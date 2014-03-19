@@ -8,8 +8,7 @@ some matlab discussion on similar issues:
 stream pi over network:
 	* http://raspi.tv/2013/how-to-stream-video-from-your-raspicam-to-your-nexus-7-tablet-using-vlc
 
-PIcam metrics:
-	* http://www.ovt.com/products/sensor.php?id=66
+http://logitech-en-amr.custhelp.com/app/answers/detail/a_id/17556/~/logitech-hd-webcam-c270-technical-specifications
 
 %%%%%%%%%%%%%%%%%%%%
 Current idea
