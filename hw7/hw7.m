@@ -15,21 +15,21 @@ rmpath ../commonFunctions;
 %% Part 1: Detect and Isolate e's
 % In order to detect and isolate these e's, we need to define a structuring element, or set of structuring elements that will catch all of the e's.
 clearvars -except I1 I2 I3;
-I = im2bw(rgb2gray(I1));
-%E = strel(e)
+I = im2bw(I1);
+E = strel('disk',2);
 
 %% Part 2: Transform e's Into Pixels
 % To transform the e's into single pixels, we can simply run a hit and miss operation using our e mask and the complement of the e mask. Once this is completed, running a simple sum of this binary image will count the number of e's in the image. This obviously assumes that each instance of "e" is replaced by a single pixel and not multiple.
-Enot=not(E);
+Enot=strel('square',3);
 Img=bwhitmiss(I,E,Enot);
 figure('name','e are now pixels'), imshow(Img), title('e now pixels')
 
-eCount=sum(Img)
+eCount=sum(Img);
 
 %% Part 3: Transform e's into 3's
 % I chose to transform the e's in the image into 3's, as 3's are sort of like a backwards capital E.
 threeMask=[];
-Img = imdilate(Iresult, threeMask);
+Img = imdilate(Img, threeMask);
 figure('name','e are now pixels'), imshow(Img), title('e now pixels')
 
 %% Part 4: Discussion
