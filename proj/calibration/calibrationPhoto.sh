@@ -16,8 +16,8 @@ for (( i = 0; i < 30; i++ )); do
 		sleep 1
 		echo "taking photo " + $i + " in " + $j + " seconds..."
 	done
-	ffmpeg -f v4l2 -i /dev/video0 "video0/video0_calib_%03d.jpg"
-	ffmpeg -f v4l2 -i /dev/video1 "video1/video1_calib1_%03d.jpg"
+	ffmpeg -f v4l2 -i /dev/video0 -vframes 1 video0/video0_calib_$i.jpg
+	ffmpeg -f v4l2 -i /dev/video1 -vframes 1 video1/video1_calib_$i.jpg
 done
 
 # not sure if i should re-enable autofocus

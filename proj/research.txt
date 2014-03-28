@@ -1,23 +1,14 @@
-todecide:
-	* open up the technical specs of the webcams
-	* what purpose are we building this for? what are we trying to track?
-		* resolution based off this answer
-		* do calibration based off this answer
 
-	* we are control systems engineers (students), what are your thoughts about using this stereo vision as a sensor? in the future we can include this sensor data into our robot designs to further refine our systems
-
-	* or we could perhaps add this to a robot to build a 3d model of the room
-		-this obviously has been done, and is pretty hard to self program
-
-
-
-#################################
 gather pictures from script found in this directory
 
 CALIBRATE CAMERAS USING MATLAB TUTORIAL:
 	http://www.mathworks.com/help/vision/ug/find-camera-parameters-with-the-camera-calibrator.html?searchHighlight=calibrate+camera
 
 	http://www.vision.caltech.edu/bouguetj/calib_doc/htmls/example5.html
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% old outdated stuff:%%%%%%%%%%%%%%%%%%%%
@@ -32,11 +23,7 @@ some matlab discussion on similar issues:
 http://logitech-en-amr.custhelp.com/app/answers/detail/a_id/17556/~/logitech-hd-webcam-c270-technical-specifications
 
 %%%%%%%%%%%%%%%%%%%%
-Current idea
-	* Use webcam, and picam
-	* pipe both to VLC or ffmpeg on pi
-	* use VLC or ffmpeg to combine both into a "mosiaic" (see mosiac on VLC tutorials)
-	* post process in MATLAB
+ffmpeg notes
 
 https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos
 
@@ -69,8 +56,3 @@ ffmpeg -i wat.mov -i TAtest.avi -filter_complex "nullsrc=size=640x240 [base]; [0
 
 * working, getting webcam (this works for microsoft webcam):
 ffmpeg -f v4l2 -r 25 -s 640x480 -i /dev/video0 out.avi
-
-* working, albeit poorly: combining webcam video with video (framerate issues):
-ffmpeg -f v4l2 -r 25 -s 640x480 -i /dev/video0 -i wat.mov -filter_complex "nullsrc=size=1280x480 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [left]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [right]; [base][left] overlay=shortest=1 [tmp1]; [tmp1][right] overlay=shortest=1:x=640" -c:v libx264 output.mkv
-
-
