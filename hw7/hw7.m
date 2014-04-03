@@ -16,6 +16,7 @@ rmpath ../commonFunctions;
 % In order to detect and isolate these e's, we need to define a structuring element, or set of structuring elements that will catch all of the e's.
 clearvars -except I1 I2 I3;
 I = im2bw(I1);
+STATS = regionprops(I)
 E = strel('disk',2);
 
 %% Part 2: Transform e's Into Pixels
