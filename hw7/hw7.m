@@ -53,8 +53,8 @@ Img = imdilate(reconstructed,remover);
 
 square = strel('square',15);
 adder = imdilate(reconstructed, square);
-figure('name','adder');
-Img2=floor(I+Img);
+figure('name','adder'), imshow(adder)
+Img2=floor(I+Img); figure('name','img'), imshow(Img2);
 Im3=Img2+adder;
 
 
