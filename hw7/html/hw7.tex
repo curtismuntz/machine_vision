@@ -1,0 +1,237 @@
+
+% This LaTeX was auto-generated from an M-file by MATLAB.
+% To make changes, update the M-file and republish this document.
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{color}
+
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+    
+    
+\subsection*{Contents}
+
+\begin{itemize}
+\setlength{\itemsep}{-1ex}
+   \item pre processing
+   \item Problem 1: Detect, Isolate and Transform the es in an Image
+   \item Part 1: Detect and Isolate e's
+   \item Part 2: Transform e's Into Pixels
+   \item Part 3: Transform e's into squares's
+   \item Part 4: Discussion
+   \item Problem 2: Hough Transform to Detect Lines in Image
+   \item Problem 3:
+\end{itemize}
+
+
+\subsection*{pre processing}
+
+\begin{verbatim}
+clear all; close all; clc;
+%code for my custom functions can be found on
+%https://github.com/curtismuntz/machine_vision/tree/master/commonFunctions
+addpath ../commonFunctions;
+%Problem 1 Data:
+I1=getIMG('letters.jpg');
+%Problem 2 Data:
+I2=getIMG('edges.png');
+%Problem 3 Data:
+I3=getIMG('test1AP1.JPG');
+rmpath ../commonFunctions;
+\end{verbatim}
+
+
+\subsection*{Problem 1: Detect, Isolate and Transform the es in an Image}
+
+
+
+\subsection*{Part 1: Detect and Isolate e's}
+
+\begin{par}
+In order to detect and isolate these e's, we need to define a structuring element, or set of structuring elements that will catch all of the e's. Instead of choosing the easy route and making a generic skeleton of the letter e, I elected to examine each object in the image and look at the region properties of said objects. Based on an Area threshold of $80>Area>110$, an Euler Number of $0$, and a Perimiter range of $65>Perimiter<70$, All of the e's are detected and highlighted in the following image. The original e was cropped from the image, and the coordinates were placed into matlab to simplify the manual processing.
+\end{par} \vspace{1em}
+\begin{verbatim}
+clearvars -except I1 I2 I3; close all
+thresh=graythresh(I1);
+I = im2bw(I1,thresh); %convert to bw
+I = imcomplement(I); %objects are white in matlab
+
+%basic e
+theE=I([28:46],[223:240],:);
+figure, imshow(theE)
+
+eSTATS=regionprops(theE,'all');
+
+reconstructed = false(size(I));
+stats = regionprops(I,'all');
+figure
+imshow(I), title('es are highlighted'); hold on;
+for i=1:size(stats)
+    if ((stats(i).Area < 110) && (stats(i).Area > 80) && (stats(i).EulerNumber == 0) && (stats(i).ConvexArea < 200) && (stats(i).ConvexArea > 150) && (stats(i).Perimeter > 65) && (stats(i).Perimeter < 70))
+        N= floor(stats(i).Centroid(1));
+        M= floor(stats(i).Centroid(2));
+        reconstructed(M,N) = true;
+        plot(N,M,'s','color','green')
+    end
+end
+hold off;
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Warning: Image is too big to fit on screen;
+displaying at 67% 
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw7_01.eps}
+
+\includegraphics [width=4in]{hw7_02.eps}
+
+
+\subsection*{Part 2: Transform e's Into Pixels}
+
+\begin{par}
+To transform the e's into single pixels, we can simply run a hit and miss operation using our e mask and the complement of the e mask. But because I elected to use region properties for this example, it was relatively easy to just include a Centroid calculation and toggle the centroid of the detected e into a true pixel value. This code can be seen in the previous section's for loop. The total number of e's in the image was 84.
+\end{par} \vspace{1em}
+\begin{verbatim}
+figure('name','e are now pixels'), imshow(reconstructed), title('e now pixels')
+eCount = sum(sum(reconstructed))
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Warning: Image is too big to fit on screen;
+displaying at 67% 
+
+eCount =
+
+    84
+
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw7_03.eps}
+
+
+\subsection*{Part 3: Transform e's into squares's}
+
+\begin{par}
+I chose to transform the e's in the image into squares. By exploiting the funcitonality of dilation, I dilate the pixel image with a square, and add the resultant image to the original image.
+\end{par} \vspace{1em}
+\begin{verbatim}
+remover=zeros(size(theE));
+remover=imcomplement(remover);
+Img = imdilate(reconstructed,remover);
+
+square = strel('square',15);
+adder = imdilate(reconstructed, square);
+figure('name','adder');
+Img2=floor(I+Img);
+Im3=Img2+adder;
+
+
+figure('name','e are now squares'), imshow(Im3), title('e now different')
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Warning: Image is too big to fit on screen;
+displaying at 67% 
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw7_04.eps}
+
+\includegraphics [width=4in]{hw7_05.eps}
+
+
+\subsection*{Part 4: Discussion}
+
+\begin{par}
+The method of choice is explained in the previous parts.
+\end{par} \vspace{1em}
+
+
+\subsection*{Problem 2: Hough Transform to Detect Lines in Image}
+
+\begin{verbatim}
+clearvars -except I1 I2 I3; close all;
+
+I=zeros(200,200); I(150,:)=1; I(151,:)=1; I(152,:)=1;
+I(:,100)=1; I(:,101)=1; I(:,102)=1;
+[H,T,R]=hough(I);
+P  = houghpeaks(H,2);
+subplot(211); imagesc(I); colormap(gray)
+subplot(212); imshow(imadjust(mat2gray(H)),'XData',T,'YData',R,'InitialMagnification','fit')
+title('Hough Transform');
+xlabel('\theta'), ylabel('\rho');
+axis on, axis normal, hold on; colormap(hot);
+plot(T(P(:,2)),R(P(:,1)),'s','color','green')
+\end{verbatim}
+
+\includegraphics [width=4in]{hw7_06.eps}
+\begin{par}
+The peaks have been generously highlighted by green. I noticed that the houghpeaks table excludes the repeated point, $(\theta=90$, \ensuremath{\backslash}rho=150)\$ and $(\theta=-90$, \ensuremath{\backslash}rho=-150)\$.
+\end{par} \vspace{1em}
+
+
+\subsection*{Problem 3:}
+
+\begin{par}
+We want to find the the extraterrestrial beings (aliens) in the image. I used matlab's findcircles function to determine the where circles exist, and then decided based on those answers which circles resemble the alien's eyes.
+\end{par} \vspace{1em}
+\begin{verbatim}
+clearvars -except I1 I2 I3; close all;
+thresh=graythresh(I3);
+I=im2bw(I3,thresh);
+
+[centers, radii, metric] = imfindcircles(I3,[5 20]);
+centersStrong1 = centers(1,:);
+radiiStrong1 = radii(1);
+metricStrong1 = metric(1);
+
+centersStrong2 = centers(5,:);
+radiiStrong2 = radii(5);
+metricStrong2 = metric(5);
+
+imshow(I3), hold on;
+viscircles(centersStrong1, radiiStrong1,'EdgeColor','r'), hold off;
+viscircles(centersStrong2, radiiStrong2,'EdgeColor','r'), hold off;
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Warning: You just called IMFINDCIRCLES with a large
+radius range. Large radius ranges reduce algorithm
+accuracy and increase computational time. For high
+accuracy, relatively small radius range should be
+used. A good rule of thumb is to choose the radius
+range such that Rmax < 3*Rmin and (Rmax - Rmin) <
+100. If you have a large radius range, say [20 100],
+consider breaking it up into multiple sets and call
+IMFINDCIRCLES for each set separately, like this:
+
+	[CENTERS1, RADII1, METRIC1] =
+        IMFINDCIRCLES(A, [20 60]);
+	[CENTERS2, RADII2, METRIC2] =
+        IMFINDCIRCLES(A, [61 100]);
+ 
+Warning: You just called IMFINDCIRCLES with very
+small radius value(s). Algorithm accuracy is limited
+for radius values less than 10.
+ 
+Warning: Image is too big to fit on screen;
+displaying at 67% 
+
+ans =
+
+  178.0051
+
+
+ans =
+
+  181.0051
+
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw7_07.eps}
+
+
+
+\end{document}
+    
