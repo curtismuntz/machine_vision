@@ -1,0 +1,269 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>hw8</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-10"><meta name="DC.source" content="hw8.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Part 1</a></li><li><a href="#3">Part 2: Horn and Schunk</a></li><li><a href="#4">Part 3: Kanade and Lucas</a></li><li><a href="#5">Comparison of results</a></li></ul></div><pre class="codeinput"><span class="comment">% Pre processing</span>
+clear <span class="string">all</span>, close <span class="string">all</span>, clc;
+frameK=[1,2,5;5,4,6];
+frameK1=[5,9,9;5,7,1];
+
+j1=((1/4)*(frameK(1,2)+frameK(2,2)+frameK1(1,2)+frameK1(2,2)));
+j=((1/4)*(frameK(1,1)+frameK(2,1)+frameK1(1,1)+frameK1(2,1)));
+Ix(1)=j1-j;
+
+i1=((1/4)*(frameK(2,1)+frameK(2,2)+frameK1(2,1)+frameK1(2,2)));
+i=((1/4)*(frameK(1,1)+frameK(1,2)+frameK1(1,1)+frameK1(1,2)));
+Iy(1)=i1-i;
+
+k1=((1/4)*(frameK1(1,1)+frameK1(1,2)+frameK1(2,1)+frameK1(2,2)));
+k=((1/4)*(frameK(1,1)+frameK(1,2)+frameK(2,1)+frameK(2,2)));
+It(1)=k1-k;
+
+j1=((1/4)*(frameK(1,3)+frameK(2,3)+frameK1(1,3)+frameK1(2,3)));
+j=((1/4)*(frameK(1,2)+frameK(2,2)+frameK1(1,2)+frameK1(2,2)));
+Ix(2)=j1-j
+
+i1=((1/4)*(frameK(2,2)+frameK(2,3)+frameK1(2,2)+frameK1(2,3)));
+i=((1/4)*(frameK(1,2)+frameK(1,3)+frameK1(1,2)+frameK1(1,3)));
+Iy(2)=i1-i
+
+k1=((1/4)*(frameK1(1,2)+frameK1(1,3)+frameK1(2,2)+frameK1(2,3)));
+k=((1/4)*(frameK(1,2)+frameK(1,3)+frameK(2,2)+frameK(2,3)));
+It(2)=k1-k
+
+clear <span class="string">i1</span> <span class="string">i</span> <span class="string">k1</span> <span class="string">k</span> <span class="string">j1</span> <span class="string">j</span>
+</pre><pre class="codeoutput">
+Ix =
+
+    1.5000   -0.2500
+
+
+Iy =
+
+    1.0000   -1.7500
+
+
+It =
+
+    3.5000    2.2500
+
+</pre><h2>Part 1<a name="2"></a></h2><p>The constraint equations were calculated in the "pre-processing" section and will be used in the remaining sections. Solving graphically means plotting the two functions and finding their intersection.</p><pre class="codeinput">x=-10:.001:10;
+constraint1=((-Ix(1)*x-It(1))/Iy(1));
+constraint2=((-Ix(2)*x-It(2))/Iy(2));
+plot(x,constraint1)
+hold <span class="string">on</span>
+plot(x,constraint2)
+
+
+idx = find(constraint1 - constraint2 &lt; eps, 1); <span class="comment">%// Index of coordinate in array</span>
+Vx = x(idx);
+Vy = constraint1(idx);
+plot(Vx, Vy, <span class="string">'ro'</span>, <span class="string">'MarkerSize'</span>, 18)
+
+disp(<span class="string">'Graphical Answers:'</span>);
+disp([<span class="string">'Vx = '</span> num2str(Vx)])
+disp([<span class="string">'Vy = '</span> num2str(Vy)])
+disp(<span class="string">''</span>);
+</pre><pre class="codeoutput">Graphical Answers:
+Vx = -3.526
+Vy = 1.789
+</pre><img vspace="5" hspace="5" src="hw8_01.png" alt=""> <h2>Part 2: Horn and Schunk<a name="3"></a></h2><p>The Horn and Shunk method is the recursive function that iteratively attempts to solve for the answer</p><pre class="codeinput">Lambda=1;
+vx=[0;0];
+vy=[0;0];
+<span class="keyword">for</span> k = 1:99
+    X1=mean(vx);
+    Y1=mean(vy);
+    <span class="keyword">for</span> i=1:2
+        P(i)=Ix(i)*X1+Iy(i)*Y1+It(i);
+        D(i)=Lambda^2+Ix(i).^2+Iy(i).^2;
+        vx(i)=X1-Ix(i)*P(i)/D(i);
+        vy(i)=Y1-Iy(i)*P(i)/D(i);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+disp(<span class="string">'Horn and Shunk method answer:'</span>);
+disp([<span class="string">'Vx = '</span> num2str(vx(1))])
+disp([<span class="string">'Vy = '</span> num2str(vy(1))])
+disp(<span class="string">''</span>)
+
+<span class="comment">%plotlines</span>
+figure(<span class="string">'name'</span>, <span class="string">'Horn and Shunk'</span>)
+vx=-10:0.1:10;
+vy=(-It(1)-Ix(1)*vx)/Iy(1);
+plot(vx,vy,<span class="string">'r'</span>);
+hold <span class="string">on</span>
+vy=(-It(2)-Ix(2)*vx)/Iy(2);
+plot(vx,vy,<span class="string">'b'</span>);
+title(<span class="string">'Horn and Shunk'</span>)
+</pre><pre class="codeoutput">Horn and Shunk method answer:
+Vx = -3.5263
+Vy = 1.7895
+</pre><img vspace="5" hspace="5" src="hw8_02.png" alt=""> <h2>Part 3: Kanade and Lucas<a name="4"></a></h2><p>The Lucas and Kanade method was a very fast and efficient matrix solution for the system of constraint equations.</p><pre class="codeinput">M=[Ix(1) Iy(1);Ix(2) Iy(2)];
+b=-[It(1);It(2)];
+disp(<span class="string">'Lucas and Kanade method answer:'</span>);
+v=inv(M'*M)*M'*b;
+disp([<span class="string">'Vx = '</span> num2str(v(1))])
+disp([<span class="string">'Vy = '</span> num2str(v(2))])
+</pre><pre class="codeoutput">Lucas and Kanade method answer:
+Vx = -3.5263
+Vy = 1.7895
+</pre><h2>Comparison of results<a name="5"></a></h2><p>All three methods produced the identical solution, <img src="hw8_eq32302.png" alt="$Vx = -3.526$"> and <img src="hw8_eq63334.png" alt="$Vy = 1.7895$">. Comparing their implementations, the Lucas and Kanade method is the most useful, considering it runs faster than the Horn and Schunk, and doesn't require plots in order to solve.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Pre processing
+clear all, close all, clc;
+frameK=[1,2,5;5,4,6];
+frameK1=[5,9,9;5,7,1];
+
+j1=((1/4)*(frameK(1,2)+frameK(2,2)+frameK1(1,2)+frameK1(2,2)));
+j=((1/4)*(frameK(1,1)+frameK(2,1)+frameK1(1,1)+frameK1(2,1)));
+Ix(1)=j1-j;
+
+i1=((1/4)*(frameK(2,1)+frameK(2,2)+frameK1(2,1)+frameK1(2,2)));
+i=((1/4)*(frameK(1,1)+frameK(1,2)+frameK1(1,1)+frameK1(1,2)));
+Iy(1)=i1-i;
+
+k1=((1/4)*(frameK1(1,1)+frameK1(1,2)+frameK1(2,1)+frameK1(2,2)));
+k=((1/4)*(frameK(1,1)+frameK(1,2)+frameK(2,1)+frameK(2,2)));
+It(1)=k1-k;
+
+j1=((1/4)*(frameK(1,3)+frameK(2,3)+frameK1(1,3)+frameK1(2,3)));
+j=((1/4)*(frameK(1,2)+frameK(2,2)+frameK1(1,2)+frameK1(2,2)));
+Ix(2)=j1-j
+
+i1=((1/4)*(frameK(2,2)+frameK(2,3)+frameK1(2,2)+frameK1(2,3)));
+i=((1/4)*(frameK(1,2)+frameK(1,3)+frameK1(1,2)+frameK1(1,3)));
+Iy(2)=i1-i
+
+k1=((1/4)*(frameK1(1,2)+frameK1(1,3)+frameK1(2,2)+frameK1(2,3)));
+k=((1/4)*(frameK(1,2)+frameK(1,3)+frameK(2,2)+frameK(2,3)));
+It(2)=k1-k
+
+clear i1 i k1 k j1 j
+%% Part 1
+% The constraint equations were calculated in the "pre-processing" section and will be used in the remaining sections.
+% Solving graphically means plotting the two functions and finding their intersection.
+x=-10:.001:10;
+constraint1=((-Ix(1)*x-It(1))/Iy(1));
+constraint2=((-Ix(2)*x-It(2))/Iy(2));
+plot(x,constraint1)
+hold on
+plot(x,constraint2)
+
+
+idx = find(constraint1 - constraint2 < eps, 1); %// Index of coordinate in array
+Vx = x(idx);
+Vy = constraint1(idx);
+plot(Vx, Vy, 'ro', 'MarkerSize', 18)
+
+disp('Graphical Answers:');
+disp(['Vx = ' num2str(Vx)])
+disp(['Vy = ' num2str(Vy)])
+disp('');
+%% Part 2: Horn and Schunk
+% The Horn and Shunk method is the recursive function that iteratively attempts to solve for the answer 
+Lambda=1;
+vx=[0;0];
+vy=[0;0];
+for k = 1:99
+    X1=mean(vx);
+    Y1=mean(vy);
+    for i=1:2
+        P(i)=Ix(i)*X1+Iy(i)*Y1+It(i);
+        D(i)=Lambda^2+Ix(i).^2+Iy(i).^2;
+        vx(i)=X1-Ix(i)*P(i)/D(i);
+        vy(i)=Y1-Iy(i)*P(i)/D(i);
+    end
+end
+
+disp('Horn and Shunk method answer:');
+disp(['Vx = ' num2str(vx(1))])
+disp(['Vy = ' num2str(vy(1))])
+disp('')
+
+%plotlines
+figure('name', 'Horn and Shunk')
+vx=-10:0.1:10;
+vy=(-It(1)-Ix(1)*vx)/Iy(1);
+plot(vx,vy,'r');
+hold on
+vy=(-It(2)-Ix(2)*vx)/Iy(2);
+plot(vx,vy,'b');
+title('Horn and Shunk')
+
+
+%% Part 3: Kanade and Lucas
+% The Lucas and Kanade method was a very fast and efficient matrix solution for the system of constraint equations.
+M=[Ix(1) Iy(1);Ix(2) Iy(2)];
+b=-[It(1);It(2)];
+disp('Lucas and Kanade method answer:');
+v=inv(M'*M)*M'*b;
+disp(['Vx = ' num2str(v(1))])
+disp(['Vy = ' num2str(v(2))])
+
+%% Comparison of results
+% All three methods produced the identical solution, $Vx = -3.526$ and $Vy = 1.7895$. Comparing their implementations, the Lucas and Kanade method is the most useful, considering it runs faster than the Horn and Schunk, and doesn't require plots in order to solve.
+##### SOURCE END #####
+--></body></html>
