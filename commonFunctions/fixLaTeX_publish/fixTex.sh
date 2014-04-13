@@ -3,11 +3,12 @@
 #fix this to pass in filename instead
 
 #cat $fileName
-cd /Users/me/git/machine_vision/hw7/html/
+cd /Users/me/git/machine_vision/hw8/html/
 
-#cd /Users/me/Dropbox/School/188/hw5/html
+#cd /Users/me/Dropbox/School/188/hw7/html
 
-file=hw7.tex
+file=hw8.tex
+#file=eee188_hw7.tex
 cp /Users/me/git/machine_vision/commonFunctions/fixLaTeX_publish/codeInsert.txt /Users/me/Desktop/tmp/published/codeInsert.txt
 cp $file /Users/me/Desktop/tmp/published/output1.tex
 cp *.eps /Users/me/Desktop/tmp/published/

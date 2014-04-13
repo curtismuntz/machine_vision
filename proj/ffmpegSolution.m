@@ -4,13 +4,14 @@ clear all, close all, clc;
 
 
 % Images and movies are too large and too many to store on this github page. They should be located on the desktop.
-workingDir = '/Users/me/Desktop/stereo/';
+workingDir = '/Users/me/Desktop/EEE178/DATA';
+fileNAME   = 'SAMPLE2.mp4';
 cd(workingDir)
 % mkdir(workingDir);
 % mkdir(workingDir,'images');
 % mkdir(workingDir,'left');
 % mkdir(workingDir,'right');
-vid = VideoReader('output.mp4');
+vid = VideoReader(fileNAME);
 
 %convert each frame into an image
 for ii = 1:vid.NumberOfFrames
@@ -28,7 +29,7 @@ end
 
 %% Convert left images into movie
 %now these are stored as individual image directories
-cd('/Users/me/Desktop/stereo/images/left')
+cd('/Users/me/Desktop/EEE178/DATA/images/left/')
 imageNames = dir(fullfile(workingDir,'images','left','*.jpg'));
 imageNames = {imageNames.name}';
 
@@ -42,7 +43,7 @@ sortedImageNames = imageNames(sortedIndices);
 
 %frames are now sorted
 %make an output file:
-outputVideo = VideoWriter(fullfile(workingDir,'leftoutput.avi'));
+outputVideo = VideoWriter(fullfile(workingDir,'_leftoutput.avi'));
 outputVideo.FrameRate = vid.FrameRate;
 open(outputVideo);
 
@@ -56,7 +57,7 @@ cd ..
 
 %% Convert right images into movie
 %now these are stored as individual image directories
-cd('/Users/me/Desktop/stereo/images/right')
+cd('/Users/me/Desktop/EEE178/DATA/images/right/')
 imageNames = dir(fullfile(workingDir,'images','right','*.jpg'));
 imageNames = {imageNames.name}';
 
@@ -70,7 +71,7 @@ sortedImageNames = imageNames(sortedIndices);
 
 %frames are now sorted
 %make an output file:
-outputVideo = VideoWriter(fullfile(workingDir,'rightoutput.avi'));
+outputVideo = VideoWriter(fullfile(workingDir,'_rightoutput.avi'));
 outputVideo.FrameRate = vid.FrameRate;
 open(outputVideo);
 cd ..
@@ -80,6 +81,3 @@ for ii = 1:length(sortedImageNames)
     writeVideo(outputVideo,img);
 end
 close(outputVideo);
-
-
-
