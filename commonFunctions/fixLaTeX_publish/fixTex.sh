@@ -3,9 +3,9 @@
 #fix this to pass in filename instead
 
 #cat $fileName
-cd /Users/me/git/machine_vision/hw8/html/
+#cd /Users/me/git/machine_vision/hw8/html/
 
-#cd /Users/me/Dropbox/School/188/hw7/html
+cd /Users/me/Dropbox/School/188/hw8/html
 
 file=hw8.tex
 #file=eee188_hw7.tex
