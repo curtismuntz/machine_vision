@@ -1,10 +1,11 @@
 % Pre processing
-clear all, close all, clc;
+clear all; close all; clc;
 %code for my custom functions can be found on 
 %https://github.com/curtismuntz/machine_vision/tree/master/commonFunctions
 addpath ../commonFunctions
 I1=getIMG('mvHW9A.jpg'); % <- learning set
 I1=im2bw(I1);
+I1=imclose(I1,strel('diamond',2));
 range=[91,37,1317,320];
 I1=imcrop(I1, range);
 I2=getIMG('mvHW9B.jpg'); % <- testing image
@@ -39,12 +40,6 @@ for i=1:10
     x=x+134;
 end
 
-% avgCentroidA     = [mean(centAx),mean(centAy)]
-% avgAreaA         = mean(areaA)
-% avgEccentricityA = mean(eccA)
-% avgFilledAreaA   = mean(filledA)
-
-
 figure('name','B objects');
 x=0;
 y=y+110;
@@ -60,11 +55,7 @@ for i=1:10
     imshow(objB{i})
     x=x+134;
 end
-% last B sucks.
-strellion=strel('disk',2)
-objB{10}=imdilate(objB{10},strellion)
-Bstats{10}=regionprops(objB{10},'all');
-imshow(objB{10});
+
 
 figure('name','C objects');
 x=0;
@@ -86,8 +77,11 @@ end
 %% 
 close all
 
-x=[1,2,3,4,5,6,7,8,9,10];
+x=1:1:10;
 figure('name','Area')
+A=zeros(1,10);
+B=zeros(1,10);
+C=zeros(1,10);
 for i=1:10
     A(i)=Astats{i}.Area;
     B(i)=Bstats{i}.Area;
@@ -95,14 +89,13 @@ for i=1:10
 end
 plot(x,A,'s','color','green'), hold on
 plot(x,B, 's','color','red'), hold on
-plot(x,C,'s','color','blue'), hold on
+plot(x,C,'s','color','blue')
 xlabel('sample')
 ylabel('Area')
 legend('A','B','C'), hold off
 
 
 figure('name','Perimiter')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.Perimeter;
     B(i)=Bstats{i}.Perimeter;
@@ -116,7 +109,6 @@ ylabel('Perimeter')
 legend('A','B','C'), hold off
 
 figure('name','Extent')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.Extent;
     B(i)=Bstats{i}.Extent;
@@ -131,7 +123,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','BoundingBox Area')
-clear A B C;
 %where bounding box areas are the heights* widths (BB(3)*BB(4))
 for i=1:10
     A(i)=((Astats{i}.BoundingBox(3))*(Astats{i}.BoundingBox(4)));
@@ -146,7 +137,6 @@ ylabel('Bounding Box Area')
 legend('A','B','C'), hold off
 
 figure('name','EquivDiameter')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.EquivDiameter;
     B(i)=Bstats{i}.EquivDiameter;
@@ -162,7 +152,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','EulerNumber')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.EulerNumber;
     B(i)=Bstats{i}.EulerNumber;
@@ -179,7 +168,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','FilledArea')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.FilledArea;
     B(i)=Bstats{i}.FilledArea;
@@ -196,7 +184,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','ConvexArea')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.ConvexArea;
     B(i)=Bstats{i}.ConvexArea;
@@ -211,7 +198,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','MinorAxisLength')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.MinorAxisLength;
     B(i)=Bstats{i}.MinorAxisLength;
@@ -225,7 +211,6 @@ ylabel('MinorAxisLength')
 legend('A','B','C'), hold off
 
 figure('name','MajorAxisLength')
-clear A B C;
 for i=1:10
     A(i)=Astats{i}.MajorAxisLength;
     B(i)=Bstats{i}.MajorAxisLength;
@@ -239,18 +224,57 @@ ylabel('MajorAxisLength')
 legend('A','B','C'), hold off
 
 
+figure('name','Solidity')
+for i=1:10
+    A(i)=Astats{i}.Solidity;
+    B(i)=Bstats{i}.Solidity;
+    C(i)=Cstats{i}.Solidity;
+end
+plot(x, A, 's','color','green'), hold on
+plot(x, B, 's','color','red'), hold on
+plot(x, C, 's','color','blue'), hold on
+xlabel('sample')
+ylabel('Solidity')
+legend('A','B','C'), hold off
 
 
+
+figure('name','Centroid Magnitude')
+for i=1:10
+    A(i)=sqrt(Astats{i}.Centroid(1)^2 + Astats{i}.Centroid(2)^2);
+    B(i)=sqrt(Bstats{i}.Centroid(1)^2 + Bstats{i}.Centroid(2)^2);
+    C(i)=sqrt(Cstats{i}.Centroid(1)^2 + Cstats{i}.Centroid(2)^2);
+end
+plot(x, A, 's','color','green'), hold on
+plot(x, B, 's','color','red'), hold on
+plot(x, C, 's','color','blue'), hold on
+title('Centroid Magnitude')
+xlabel('sample')
+ylabel('Centroid Magnitude')
+legend('A','B','C'), hold off
+
+figure('name','Average Extrema')
+for i=1:10
+    A(i)=mean(mean(Astats{i}.Extrema));
+    B(i)=mean(mean(Bstats{i}.Extrema));
+    C(i)=mean(mean(Cstats{i}.Extrema));
+end
+plot(x, A, 's','color','green'), hold on
+plot(x, B, 's','color','red'), hold on
+plot(x, C, 's','color','blue'), hold on
+xlabel('sample')
+ylabel('Centroid Magnitude')
+legend('A','B','C'), hold off
 
 %% Woo
 % the graphs are analyzed to find good seperators, and then combined into
 % multiple variable seperators. Perimeter seemed to seperate C's from the
 % rest of the letters, and Extent seemed to seperate B's from the rest of
 % the letters. Combining the two:
-
+A1=zeros(1,10);
+A2=A1; A3=A1; B1=A1; B2=A1; B3=A1; C1=A1; C2=A1; C3=A1;
 
 figure('name','Perim vs Extent')
-clear A1 A2 B1 B2 C1 C2;
 for i=1:10
     A1(i)=Astats{i}.Extent;
     B1(i)=Bstats{i}.Extent;
@@ -269,7 +293,6 @@ legend('A','B','C'), hold off
 
 
 figure('name','MajorAxisLength vs FilledArea')
-clear A1 A2 B1 B2 C1 C2;
 for i=1:10
     A1(i)=Astats{i}.FilledArea;
     B1(i)=Bstats{i}.FilledArea;
@@ -286,8 +309,40 @@ ylabel('MajorAxisLength')
 legend('A','B','C'), hold off
 
 
+figure('name','MajorAxisLength vs EulerNumber')
+for i=1:10
+    A1(i)=Astats{i}.EulerNumber;
+    B1(i)=Bstats{i}.EulerNumber;
+    C1(i)=Cstats{i}.EulerNumber;
+    A2(i)=Astats{i}.MajorAxisLength;
+    B2(i)=Bstats{i}.MajorAxisLength;
+    C2(i)=Cstats{i}.MajorAxisLength;
+end
+plot(A1, A2, 's','color','green'), hold on
+plot(B1, B2, 's','color','red'), hold on
+plot(C1, C2, 's','color','blue'), hold on
+xlabel('EulerNumber')
+ylabel('MajorAxisLength')
+legend('A','B','C'), hold off
+
+
+figure('name','Extent vs EulerNumber')
+for i=1:10
+    A1(i)=Astats{i}.EulerNumber;
+    B1(i)=Bstats{i}.EulerNumber;
+    C1(i)=Cstats{i}.EulerNumber;
+    A2(i)=Astats{i}.Extent;
+    B2(i)=Bstats{i}.Extent;
+    C2(i)=Cstats{i}.Extent;
+end
+plot(A1, A2, 's','color','green'), hold on
+plot(B1, B2, 's','color','red'), hold on
+plot(C1, C2, 's','color','blue'), hold on
+xlabel('EulerNumber')
+ylabel('Extent')
+legend('A','B','C'), hold off
+
 figure('name','MajorAxisLength vs FilledArea vs Extent')
-clear A1 A2 A3 B1 B2 B3 C1 C2 C3;
 for i=1:10
     A1(i)=Astats{i}.FilledArea;
     B1(i)=Bstats{i}.FilledArea;
@@ -314,61 +369,144 @@ legend('A','B','C'), hold off
 % feature sets, we combine the known good seperators into a single feature set.
 
 
+trainingSetA= zeros(30,2);
+resultSetA = zeros(30,1);
+for i=1:10
+    m=1;
+    trainingSetA(i,m)   = Astats{i}.Extent;
+    trainingSetA(i,m+1) = Astats{i}.EulerNumber;
+    resultSetA(i)       = 1;
+end
+for i=11:20
+    m=1;
+    trainingSetA(i,m)   = Bstats{i-10}.Extent;
+    trainingSetA(i,m+1) = Bstats{i-10}.EulerNumber;
+end
+for i=21:30
+    m=1;
+    trainingSetA(i,m)   = Cstats{i-20}.Extent;
+    trainingSetA(i,m+1) = Cstats{i-20}.EulerNumber;
+end
 
 
-%% Perceptron for A
+trainingSetB= zeros(30,2);
+resultSetB = zeros(30,1);
+for i=1:10
+    m=1;
+    trainingSetB(i,m)   = Astats{i}.Extent;
+    trainingSetB(i,m+1) = Astats{i}.EulerNumber;
+end
+for i=11:20
+    m=1;
+    trainingSetB(i,m)   = Bstats{i-10}.Extent;
+    trainingSetB(i,m+1) = Bstats{i-10}.EulerNumber;
+    resultSetB(i) = 1; % these are A's so we should switch their desired output to 1!!!
+end
+for i=21:30
+    m=1;
+    trainingSetB(i,m)   = Cstats{i-20}.Extent;
+    trainingSetB(i,m+1) = Cstats{i-20}.EulerNumber;
+end
+
+
+trainingSetC= zeros(30,2);
+resultSetC = zeros(30,1);
+for i=1:10
+    m=1;
+    trainingSetC(i,m)   = Astats{i}.Perimeter;
+    trainingSetC(i,m+1) = Astats{i}.EulerNumber;
+    %trainingSetC(i,m)    = Astats{i}.MajorAxisLength;
+    %trainingSetC(i,m+1)  = Astats{i}.FilledArea;
+end
+for i=11:20
+    m=1;
+    trainingSetC(i,m)   = Bstats{i-10}.Perimeter;
+    trainingSetC(i,m+1) = Bstats{i-10}.EulerNumber;
+end
+for i=21:30
+    m=1;
+    trainingSetC(i,m)   = Cstats{i-20}.Perimeter;
+    trainingSetC(i,m+1) = Cstats{i-20}.EulerNumber;
+    resultSetC(i) = 1; % these are C's so we should switch their desired output to 1!!!
+
+end
+
+
+%% Perceptron for C
 % Because the perceptron learning algorithm is a binary classifier, we have
 % to stage the detections in order to solve for three classes. In this
-% section, the perceptron algorithm is computed for the letter $A$ vs
-% $notA$, and draws the resultant discrimination line for the
-% classification. Because I will create three seperate perceptron weight
-% and bias matricies, I wrote the algorithm as its own function: customPerceptron.m
-close all;
-trainingSet = 
-threshold = %threshold to decide if the output is good or bad. usually this is 0
-learningRate = 0.1;
+% section, the perceptron algorithm is computed for the letter $B$ vs
+% $notB$, and draws the resultant discrimination line for the
+% classification.
+close all; clc;
+%build training set
 
-[m n] = size(trainingSet);
-weightVector = zeros(1,n-1);
-
-iterationNo = 1;
-% training phase
-while true
-   error_count = 0;
-   for i=1:m,
-      if trainingSet(i,1:n-1)*weightVector' > threshold
-         result = 1;
-      else
-         result = 0;
-      end
-
-      error = trainingSet(i,n) - result;
-      if error ~= 0
-         error_count = error_count + 1;
-         for j=1:n-1,
-            if trainingSet(i,j) == 1
-               weightVector(1,j) = weightVector(1,j) + error*learningRate;
-            end
-         end
-      end
-   end
-   
-   iterationNo = iterationNo +1;
-   if iterationNo >= 1000
-      disp('Neuron input calculation couldn''t completed in timely fashion.');
-      return
-   end 
-   if error_count == 0
-		break
-   end
+[m, n] = size(trainingSetC);
+weightVector = ones(1,n);
+for i=1:n
+    weightVector(i) = weightVector(i)./(5); %initialize to small numbers. 12 guaranteed to be random, it was chosen through a set of dice rolls.
 end
-% get Sample result
-testData = [ 1 0 1 ];
 
-if testData * weightVector' > threshold
-   disp('Result is an A.');
-else
-   disp('Result is 0.');
+%weightVector = zeros(1,n);
+threshold = 0;%threshold to decide if the output is good or bad. usually this is 0
+error_count = 1;
+bias = 0.1;
+result = 1;
+iterationNo = 1;
+learningRate = 0.001;
+% training phase
+while (error_count > 0)
+	error_count = 0;
+	for i=1:m
+        gx=dot(weightVector,trainingSetC(i,:))+bias;
+            if (gx > threshold)
+                result = 1;
+            else
+                result = 0;
+            end
+
+            error = resultSetC(i)-result;
+            if (error ~= 0)
+                error_count = error_count + 1;
+                weightVector = weightVector + (learningRate*(error))*trainingSetC(i,1:n);
+                bias = bias + learningRate*error;
+            end
+    end
+    
+	if (iterationNo >= 1000)
+        disp('Neuron input calculation couldn''t completed in timely fashion.');
+        break
+    end
+	iterationNo = iterationNo +1;
+end
+disp(['answer converged in ' num2str(iterationNo) ' iterations']);
+
+% get Sample result
+disp(['weights: ' num2str(weightVector)]);
+disp(['bias: ' num2str(bias)]);
+gxA=0;
+gx=0;
+for k=1:10
+    %testing training set data:
+    testDataC = trainingSetC(k+20,:);
+    gxC=dot(weightVector,testDataC)+bias;
+    
+    testDataA = trainingSetC(k,:);
+    gx=dot(weightVector,testDataA)+bias;
+       
+    fprintf('\n');
+    if  gxC > threshold
+       fprintf(['Result is C. %s\n ' num2str(gxC)]); % result is not expected
+    else
+       fprintf(2,['Result is not a C. %s\n ' num2str(gxC)]); 
+    end
+    fprintf('\n');
+    if gx > threshold
+       fprintf(2,['Result is C. %s\n ' num2str(gx)]);
+    else
+       fprintf(['Result is not a C. %s\n ' num2str(gx)]); %result is not expected
+    end
+    fprintf('\n-----');
 end
 
 
@@ -376,12 +514,69 @@ end
 % This section will solve the perceptron algorithm for the letter $B$ vs
 % $notB$ and draws the resultant discrimination line for the
 % classificaition
+%function [weightVector, bias] = customPerceptron(trainingSet)
+addpath ../commonFunctions;
+[weightVectorA, biasA] = customPerceptron(trainingSetB, resultSetB);
+rmpath ../commonFunctions;
 
-%% Perceptron for C
-% This section will solve the perceptron algorithm for the letter $C$ vs
-% $notC$ and draws the resultant discrimination line for the
+disp(['weights: ' num2str(weightVector)]);
+disp(['bias: ' num2str(bias)]);
+gxB=0;
+gx=0;
+for k=1:10
+    %testing training set data:
+    testDataB = trainingSetB(k+10,:);
+    gxB=dot(weightVectorA,testDataB)+biasA;
+    testDataA = trainingSetB(k,:);
+    gx=dot(weightVectorA,testDataA)+biasA;
+       
+    fprintf('\n');
+    if  gxB > threshold
+       fprintf(['Result is B. %s\n ' num2str(gxB)]); 
+    else
+       fprintf(2,['Result is not a B. %s\n ' num2str(gxB)]); %result is not expected
+    end
+    fprintf('\n');
+    if gx > threshold
+       fprintf(2,['Result is B. %s\n ' num2str(gx)]);% result is not expected
+    else
+       fprintf(['Result is not a B. %s\n ' num2str(gx)]); 
+    end
+    fprintf('\n-----');
+end
+%% Perceptron for A
+% This section will solve the perceptron algorithm for the letter $A$ vs
+% $notA$ and draws the resultant discrimination line for the
 % classificaition
+addpath ../commonFunctions;
+[weightVectorA, biasA] = customPerceptron(trainingSetA, resultSetA);
+rmpath ../commonFunctions;
 
+disp(['weights: ' num2str(weightVector)]);
+disp(['bias: ' num2str(bias)]);
+gxA=0;
+gx=0;
+for k=1:10
+    %testing training set data:
+    testDataA = trainingSetA(k,:);
+    gxA=dot(weightVectorA,testDataA)+biasA;
+    testDataB = trainingSetA(k+10,:);
+    gx=dot(weightVectorA,testDataB)+biasA;
+       
+    fprintf('\n');
+    if  gxA > threshold
+       fprintf(['Result is A. %s\n ' num2str(gxA)]); 
+    else
+       fprintf(2,['Result is not an A. %s\n ' num2str(gxA)]); %result is not expected
+    end
+    fprintf('\n');
+    if gx > threshold
+       fprintf(2,['Result is A. %s\n ' num2str(gx)]);% result is not expected
+    else
+       fprintf(['Result is not an A. %s\n ' num2str(gx)]); 
+    end
+    fprintf('\n-----');
+end
 %%
 %% Comparing our unknown set vs the perceptrons
 % Before we run our code on the target set, we first have to normalize the
@@ -389,11 +584,11 @@ end
 % such that we can dilate them back into the final image later.
 
 
-x=[
-
-
-[normalizeX,normalizeY]=size(objA{1})
-
+% x=[
+% 
+% 
+% [normalizeX,normalizeY]=size(objA{1})
+% 
 
 %% Visualizing the Output
 % redraw the output 
