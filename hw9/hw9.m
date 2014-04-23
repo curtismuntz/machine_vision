@@ -496,9 +496,9 @@ for k=1:10
        
     fprintf('\n');
     if  gxC > threshold
-       fprintf(['Result is C. %s\n ' num2str(gxC)]); % result is not expected
+       fprintf(['Result is C. %s\n ' num2str(gxC)]); 
     else
-       fprintf(2,['Result is not a C. %s\n ' num2str(gxC)]); 
+       fprintf(2,['Result is not a C. %s\n ' num2str(gxC)]); % result is not expected
     end
     fprintf('\n');
     if gx > threshold
@@ -516,19 +516,19 @@ end
 % classificaition
 %function [weightVector, bias] = customPerceptron(trainingSet)
 addpath ../commonFunctions;
-[weightVectorA, biasA] = customPerceptron(trainingSetB, resultSetB);
+[weightVectorB, biasB] = customPerceptron(trainingSetB, resultSetB);
 rmpath ../commonFunctions;
 
-disp(['weights: ' num2str(weightVector)]);
-disp(['bias: ' num2str(bias)]);
+disp(['weights: ' num2str(weightVectorB)]);
+disp(['bias: ' num2str(biasB)]);
 gxB=0;
 gx=0;
 for k=1:10
     %testing training set data:
     testDataB = trainingSetB(k+10,:);
-    gxB=dot(weightVectorA,testDataB)+biasA;
+    gxB=dot(weightVectorB,testDataB)+biasB;
     testDataA = trainingSetB(k,:);
-    gx=dot(weightVectorA,testDataA)+biasA;
+    gx=dot(weightVectorB,testDataA)+biasB;
        
     fprintf('\n');
     if  gxB > threshold
@@ -552,12 +552,13 @@ addpath ../commonFunctions;
 [weightVectorA, biasA] = customPerceptron(trainingSetA, resultSetA);
 rmpath ../commonFunctions;
 
-disp(['weights: ' num2str(weightVector)]);
-disp(['bias: ' num2str(bias)]);
+disp(['weights: ' num2str(weightVectorA)]);
+disp(['bias: ' num2str(biasA)]);
+
+%testing training set data:
 gxA=0;
 gx=0;
 for k=1:10
-    %testing training set data:
     testDataA = trainingSetA(k,:);
     gxA=dot(weightVectorA,testDataA)+biasA;
     testDataB = trainingSetA(k+10,:);
@@ -582,7 +583,11 @@ end
 % Before we run our code on the target set, we first have to normalize the
 % size of the target letters. I've recorded the location of their centers
 % such that we can dilate them back into the final image later.
-
+clear testDataA testDataB testDataC 
+%load images
+%clean images up
+%resize images
+imresize(test)
 
 % x=[
 % 
