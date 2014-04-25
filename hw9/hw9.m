@@ -462,6 +462,7 @@ legend('A','B','C'), hold off
 
 %% Mean Distance Classifier
 % Using the equations defined in class, the following equation was derived in order to find the Mean Distance to Centroid. These equations will be plotted simultaneously with the Neural Network solution in the next part.
+% $x_{2}=\frac{(-2*x_{1}*\bar{x_{1}}+(\bar{x_{1}}^2)+(\bar{x_{2}}^2)+2*x_{1}*a-(a^2)-(b^2))}{2*\bar{x_{1}}-2*b}$ where $b=$
 
 %x2=(-2*x1*x1b+(x1b^2)+(x2b^2)+2*x1*a-(a^2)-(b^2))/(2*x1b-2*b)
 %MDC C:
