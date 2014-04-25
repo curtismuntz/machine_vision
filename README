@@ -1,3 +1,20 @@
 Contains MATLAB coursework for EEE178- Machine Vision
 
 feel free to use as reference
+
+Unfortunately, most of the coursework is using images that I do not own. I have excluded the images from this repository. The code is pretty specific toward the images, but the concepts are shown in the code.
+
+* HW1- basic arithmetic image processing
+* Hw2- Gaussian Masks/ Filtering in space/frequency domains, custom convolution code
+* HW3- More gaussian/frequency domain filtering & Discrete Cosine Transform
+* HW4- Edge detection methods, space and frequency domains
+* HW5- Edge detection, gradients, morphological operations
+* HW6- Binary images and morphological operations
+* Test1- 
+* HW7- Morphological operations for object detections, hough transforms, circle detections
+* HW8- Optical flow approaches
+* HW9- Object detection using Neural Networks, minimum distance classifiers
+* Test2-
+
+
+* Project- Stereo Vision object tracking
