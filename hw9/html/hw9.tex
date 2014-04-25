@@ -1,6 +1,37 @@
+
+% This LaTeX was auto-generated from an M-file by MATLAB.
+% To make changes, update the M-file and republish this document.
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{color}
+
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+    
+    
+\subsection*{Contents}
+
+\begin{itemize}
+\setlength{\itemsep}{-1ex}
+   \item Plotting Regionprop Features
+   \item Finding Good Seperators
+   \item Creating Feature Sets
+   \item Mean Distance Classifier
+   \item Perceptron for C
+   \item Perceptron for B
+   \item Perceptron for A
+   \item Comparing our unknown set vs the perceptrons
+   \item Neural Network Results
+\end{itemize}
+\begin{verbatim}
 % Pre processing
 clear all; close all; clc;
-%code for my custom functions can be found on 
+%code for my custom functions can be found on
 %https://github.com/curtismuntz/machine_vision/tree/master/commonFunctions
 addpath ../commonFunctions
 I1=getIMG('mvHW9A.jpg'); % <- learning set
@@ -72,10 +103,27 @@ for i=1:10
     imshow(objC{i})
     x=x+134;
 end
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Warning: Image is too big to fit on
+screen; displaying at 67% 
+Warning: Image is too big to fit on
+screen; displaying at 17% 
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw9_01.eps}
+
+\includegraphics [width=4in]{hw9_02.eps}
+
+\includegraphics [width=4in]{hw9_03.eps}
 
 
-%% Plotting Regionprop Features
-% What follows is a bunch of graphs of the distributions of the various features of the letters.
+\subsection*{Plotting Regionprop Features}
+
+\begin{par}
+What follows is a bunch of graphs of the distributions of the various features of the letters.
+\end{par} \vspace{1em}
+\begin{verbatim}
 close all
 
 x=1:1:10;
@@ -266,9 +314,41 @@ plot(x, C, 's','color','blue'), hold on
 xlabel('sample')
 ylabel('Average Extrema')
 legend('A','B','C'), hold off
+\end{verbatim}
 
-%% Finding Good Seperators
-% The graphs are analyzed to find good seperators.
+\includegraphics [width=4in]{hw9_04.eps}
+
+\includegraphics [width=4in]{hw9_05.eps}
+
+\includegraphics [width=4in]{hw9_06.eps}
+
+\includegraphics [width=4in]{hw9_07.eps}
+
+\includegraphics [width=4in]{hw9_08.eps}
+
+\includegraphics [width=4in]{hw9_09.eps}
+
+\includegraphics [width=4in]{hw9_10.eps}
+
+\includegraphics [width=4in]{hw9_11.eps}
+
+\includegraphics [width=4in]{hw9_12.eps}
+
+\includegraphics [width=4in]{hw9_13.eps}
+
+\includegraphics [width=4in]{hw9_14.eps}
+
+\includegraphics [width=4in]{hw9_15.eps}
+
+\includegraphics [width=4in]{hw9_16.eps}
+
+
+\subsection*{Finding Good Seperators}
+
+\begin{par}
+The graphs are analyzed to find good seperators.
+\end{par} \vspace{1em}
+\begin{verbatim}
 A1=zeros(1,10);
 A2=A1; A3=A1; B1=A1; B2=A1; B3=A1; C1=A1; C2=A1; C3=A1;
 
@@ -377,10 +457,27 @@ xlabel('FilledArea')
 ylabel('MajorAxisLength')
 zlabel('Extent')
 legend('A','B','C'), hold off
+\end{verbatim}
 
-%% Creating Feature Sets
-% Now that good seperators can be seen, we can combine these into training sets. Extent and Euler number do a great job seperating the B's and C's, but it fails to address the A's. Even though the A's are still in a very different grouping from the others, there is no way to draw a straight line to seperate them because their distribution is in between the other letters. For this reason, another training set was formed for the A letters, using the average extrema and the major axis length.
+\includegraphics [width=4in]{hw9_17.eps}
 
+\includegraphics [width=4in]{hw9_18.eps}
+
+\includegraphics [width=4in]{hw9_19.eps}
+
+\includegraphics [width=4in]{hw9_20.eps}
+
+\includegraphics [width=4in]{hw9_21.eps}
+
+\includegraphics [width=4in]{hw9_22.eps}
+
+
+\subsection*{Creating Feature Sets}
+
+\begin{par}
+Now that good seperators can be seen, we can combine these into training sets. Extent and Euler number do a great job seperating the B's and C's, but it fails to address the A's. Even though the A's are still in a very different grouping from the others, there is no way to draw a straight line to seperate them because their distribution is in between the other letters. For this reason, another training set was formed for the A letters, using the average extrema and the major axis length.
+\end{par} \vspace{1em}
+\begin{verbatim}
 figure('name', 'combining the feature sets!!!');
 trainingSet= zeros(30,2);
 resultSetA = zeros(30,1);
@@ -459,10 +556,21 @@ title('A Seperation Confirmed');
 xlabel('Average Extrema')
 ylabel('Major Axis Length')
 legend('A','B','C'), hold off
+\end{verbatim}
 
-%% Mean Distance Classifier
-% Using the equations defined in class, the following equation was derived in order to find the Mean Distance to Centroid. These equations will be plotted simultaneously with the Neural Network solution in the next part.
+\includegraphics [width=4in]{hw9_23.eps}
 
+\includegraphics [width=4in]{hw9_24.eps}
+
+\includegraphics [width=4in]{hw9_25.eps}
+
+
+\subsection*{Mean Distance Classifier}
+
+\begin{par}
+Using the equations defined in class, the following equation was derived in order to find the Mean Distance to Centroid. These equations will be plotted simultaneously with the Neural Network solution in the next part.
+\end{par} \vspace{1em}
+\begin{verbatim}
 %x2=(-2*x1*x1b+(x1b^2)+(x2b^2)+2*x1*a-(a^2)-(b^2))/(2*x1b-2*b)
 %MDC C:
 x1b=avgCExt; x2b=avgCEN; a=(avgAExt+avgBExt)/2; b=(avgAEN + avgBEN)/2; x1=0:0.001:1;
@@ -477,8 +585,15 @@ clear x1b x2b a b
 %MDC A
 x1b=avgAXtrm; x2b=avgAMAL; a=avgnotAXtrm; b=avgnotAMAL; x1=45:1:65;
 MDC_A=(-2*x1*x1b+(x1b^2)+(x2b^2)+2*x1*a-(a^2)-(b^2))/(2*x2b-2*b);
-%% Perceptron for C
-% Because the perceptron learning algorithm is a binary classifier, we have to stage the detections in order to solve for three classes. In this section, the perceptron algorithm is computed for the letter $B$ vs $notB$, and draws the resultant discrimination line for the classification. Because we will need to run the perceptron three times, I created a function [weightVector, bias] = customPerceptron(trainingSet, resultSet) to reduce the amount of code needed. For clarity, the full code is listed in this section.
+\end{verbatim}
+
+
+\subsection*{Perceptron for C}
+
+\begin{par}
+Because the perceptron learning algorithm is a binary classifier, we have to stage the detections in order to solve for three classes. In this section, the perceptron algorithm is computed for the letter $B$ vs $notB$, and draws the resultant discrimination line for the classification. Because we will need to run the perceptron three times, I created a function [weightVector, bias] = customPerceptron(trainingSet, resultSet) to reduce the amount of code needed. For clarity, the full code is listed in this section.
+\end{par} \vspace{1em}
+\begin{verbatim}
 close all; clc;
 %build training set
 
@@ -513,7 +628,7 @@ while (error_count > 0)
                 biasC = biasC + learningRate*error;
             end
     end
-    
+
 	if (iterationNo >= 1000)
         disp('Neuron input calculation couldn''t completed in timely fashion.');
         break
@@ -535,9 +650,22 @@ plot(t,MDC_C,'color','cyan'), hold on;
 xlabel('Extent')
 ylabel('EulerNumber')
 legend('A','B','C','NN sol','MDC sol'), hold off
+\end{verbatim}
 
-%% Perceptron for B
-% This section will solve the perceptron algorithm for the letter $B$ vs $notB$ and draws the resultant discrimination line for the classificaition. the customPerceptron function is implemented using the code from the previous section.
+        \color{lightgray} \begin{verbatim}answer converged in 24 iterations
+weights: 0.12655       0.207
+bias: -0.069
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw9_26.eps}
+
+
+\subsection*{Perceptron for B}
+
+\begin{par}
+This section will solve the perceptron algorithm for the letter $B$ vs $notB$ and draws the resultant discrimination line for the classificaition. the customPerceptron function is implemented using the code from the previous section.
+\end{par} \vspace{1em}
+\begin{verbatim}
 addpath ../commonFunctions;
 [weightVectorB, biasB] = customPerceptron(trainingSet, resultSetB);
 rmpath ../commonFunctions;
@@ -555,10 +683,22 @@ plot(t,MDC_B,'color','cyan'), hold on; % MDC sol
 xlabel('Extent')
 ylabel('EulerNumber')
 legend('A','B','C','NN sol','MDC sol'), hold off
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}answer converged in 47 iterations
+weights: 0.12925      -0.029
+bias: -0.071
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw9_27.eps}
 
 
-%% Perceptron for A
-% This section will solve the perceptron algorithm for the letter $A$ vs $notA$ and draws the resultant discrimination line for the classificaition
+\subsection*{Perceptron for A}
+
+\begin{par}
+This section will solve the perceptron algorithm for the letter $A$ vs $notA$ and draws the resultant discrimination line for the classificaition
+\end{par} \vspace{1em}
+\begin{verbatim}
 addpath ../commonFunctions;
 [weightVectorA, biasA] = customPerceptron(trainingSetA, resultSetA);
 rmpath ../commonFunctions;
@@ -576,10 +716,23 @@ plot(t,MDC_A,'color','cyan'), hold on; % MDC sol
 xlabel('average etrema')
 ylabel('MajorAxisLength')
 legend('A','B','C','NN sol','MDC sol'), hold off
+\end{verbatim}
 
-%% Comparing our unknown set vs the perceptrons
-% Through a careful manual cropping, four values of the test set were compared against the neural network solution for each letter.
-clear testDataA testDataB testDataC 
+        \color{lightgray} \begin{verbatim}answer converged in 109 iterations
+weights: 0.55556    -0.45275
+bias: 0.096
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw9_28.eps}
+
+
+\subsection*{Comparing our unknown set vs the perceptrons}
+
+\begin{par}
+Through a careful manual cropping, four values of the test set were compared against the neural network solution for each letter.
+\end{par} \vspace{1em}
+\begin{verbatim}
+clear testDataA testDataB testDataC
 
 figure('name', 'Test Objects')
 scalar = 4.1818;
@@ -597,7 +750,7 @@ stats=regionprops(test1,'all');
 test1Stats=[stats.Extent,stats.EulerNumber];
 test1StatsA=[mean(mean(stats.Extrema)),stats.MajorAxisLength];
 if(dot(weightVectorA,test1StatsA)+biasA > 0), disp('detected an A');title('detected an A');
-elseif((dot(weightVectorB,test1Stats)+biasB) > 0), disp('detected a B'); title('detected a B'); 
+elseif((dot(weightVectorB,test1Stats)+biasB) > 0), disp('detected a B'); title('detected a B');
 elseif((dot(weightVectorC,test1Stats)+biasC) > 0), disp('detected a C'); title('detected a C');
 else disp('-----'),title('no detection'); end
 
@@ -607,7 +760,7 @@ stats=regionprops(test2,'all');
 test2Stats=[stats.Extent,stats.EulerNumber];
 test2StatsA=[mean(mean(stats.Extrema)),stats.MajorAxisLength];
 if(dot(weightVectorA,test2StatsA)+biasA > 0), disp('detected an A');title('detected an A');
-elseif(dot(weightVectorB,test2Stats)+biasB > 0), disp('detected a B'); title('detected a B'); 
+elseif(dot(weightVectorB,test2Stats)+biasB > 0), disp('detected a B'); title('detected a B');
 elseif(dot(weightVectorC,test2Stats)+biasC > 0), disp('detected a C'); title('detected a C');
 else disp('-----'),title('no detection'); end
 
@@ -616,7 +769,7 @@ stats=regionprops(test3,'all');
 test3Stats=[stats.Extent,stats.EulerNumber];
 test3StatsA=[mean(mean(stats.Extrema)),stats.MajorAxisLength];
 if(dot(weightVectorA,test3StatsA)+biasA > 0), disp('detected an A');title('detected an A');
-elseif(dot(weightVectorB,test3Stats)+biasB > 0), disp('detected a B'); title('detected a B'); 
+elseif(dot(weightVectorB,test3Stats)+biasB > 0), disp('detected a B'); title('detected a B');
 elseif(dot(weightVectorC,test3Stats)+biasC > 0), disp('detected a C'); title('detected a C');
 else disp('-----'), title('no detection'); end
 
@@ -625,11 +778,27 @@ stats=regionprops(test4,'all');
 test4Stats=[stats.Extent,stats.EulerNumber];
 test4StatsA=[mean(mean(stats.Extrema)),stats.MajorAxisLength];
 if(dot(weightVectorA,test4StatsA)+biasA > 0), disp('detected an A');title('detected an A');
-elseif(dot(weightVectorB,test4Stats)+biasB > 0), disp('detected a B'); title('detected a B'); 
+elseif(dot(weightVectorB,test4Stats)+biasB > 0), disp('detected a B'); title('detected a B');
 elseif(dot(weightVectorC,test4Stats)+biasC > 0), disp('detected a C'); title('detected a C');
 else disp('-----'), title('no detection'); end
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}-----
+detected a B
+detected a C
+-----
+\end{verbatim} \color{black}
+    
+\includegraphics [width=4in]{hw9_29.eps}
+
+
+\subsection*{Neural Network Results}
+
+\begin{par}
+The results from the testing were not very successful. By using only two features to create the weight vectors in the neurons, we are limiting the robustness of the solution. Should we want better results, perhaps implementing most of the regionprop data into our calculations will result in better classification.
+\end{par} \vspace{1em}
 
 
 
-%% Neural Network Results
-% The results from the testing were not very successful. By using only two features to create the weight vectors in the neurons, we are limiting the robustness of the solution. Should we want better results, perhaps implementing most of the regionprop data into our calculations will result in better classification.
+\end{document}
+    

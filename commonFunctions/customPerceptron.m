@@ -10,7 +10,6 @@ function [weightVector, bias] = customPerceptron(trainingSet, resultSet)
     threshold = 0;%threshold to decide if the output is good or bad. usually this is 0
     error_count = 1;
     bias = 0.1;
-    result = 1;
     iterationNo = 1;
     learningRate = 0.001;
     % training phase
