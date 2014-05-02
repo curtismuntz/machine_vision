@@ -1,4 +1,4 @@
-% Pre processing
+%% Pre processing
 clear all; close all; clc;
 %code for my custom functions can be found on 
 %https://github.com/curtismuntz/machine_vision/tree/master/commonFunctions

@@ -4,8 +4,8 @@ clear all, close all, clc;
 
 
 % Images and movies are too large and too many to store on this github page. They should be located on the desktop.
-workingDir = '/Users/me/Desktop/EEE178/DATA';
-fileNAME   = 'SAMPLE2.mp4';
+workingDir = '/Users/me/Desktop/stereo2/';
+fileNAME   = 'output.mp4';
 cd(workingDir)
 % mkdir(workingDir);
 % mkdir(workingDir,'images');
@@ -20,16 +20,16 @@ for ii = 1:vid.NumberOfFrames
 	%crop each image to reclaim original frames
     Left  = img([1:480],[1:640],:);
 	Right = img([1:480],[641:1280],:);
-    imwrite(Left,fullfile(workingDir,'images','left',sprintf('left%d.jpg',ii)));
-    imwrite(Right,fullfile(workingDir,'images','right',sprintf('right%d.jpg',ii)));
-    imwrite(img,fullfile(workingDir,'images',sprintf('img%d.jpg',ii)));
+    imwrite(Left,fullfile(workingDir, sprintf('left%03d.jpg',ii)));
+    imwrite(Right,fullfile(workingDir, sprintf('right%03d.jpg',ii)));
+    imwrite(img,fullfile(workingDir, sprintf('img%03d.jpg',ii)));
 end
 
 
 
 %% Convert left images into movie
 %now these are stored as individual image directories
-cd('/Users/me/Desktop/EEE178/DATA/images/left/')
+cd('/Users/me/Desktop/stereo1/images/left/')
 imageNames = dir(fullfile(workingDir,'images','left','*.jpg'));
 imageNames = {imageNames.name}';
 
