@@ -6,7 +6,9 @@ CALIBRATE CAMERAS USING MATLAB TUTORIAL:
 
 	http://www.vision.caltech.edu/bouguetj/calib_doc/htmls/example5.html
 
-
+steps: 1: calibrate
+2: finish tracking
+3: cleanups/overlays/physics
 
 
 
